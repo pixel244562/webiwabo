@@ -1,10 +1,16 @@
 #include <stdio.h>
 
-void logic(int tablero[5][9], int soles);
+void logic(int tablero[5][9], int soles, int tiempo);
 void refresh(int tablero[5][9]);
 
 int main(){ //Espacio de pruebas
-    int test[5][9]; 
+    int test[5][9] = {
+        {0, 0, 0, 0, 0, 3, 3, 3, 0},
+        {0, 0, 0, 0, 0, 0, 3, 0, 3},
+        {1, 1, 1, 0, 3, 0, 3, 0, 3},
+        {0, 0, 0, 0, 3, 3, 3, 3, 3},
+        {0, 0, 0, 0, 0, 0, 3, 3, 3}
+}; 
     /*Matriz solo de prueba, considerare provisionalmente
     0 = vacio
     1 = girasol
@@ -12,26 +18,29 @@ int main(){ //Espacio de pruebas
     3 = zombie normal
     4 = flagged zombie */
     int suntest = 20;
+    int clicks = 0;
 
-    //Esqueleto para tests
+    /*Esqueleto para tests si llego a necesitar llenarla mientras se ejecuta
     for (int i = 0; i < 5; i++){
         for (int j = 0; j < 9; j++){
             printf("Casilla %d,%d: ", i+1, j+1);
             scanf("%d", &test[i][j]);
         }
-    }
+    }*/
 
     refresh(test);
+    printf("%d", suntest);
 
     //Asumimos que paso un segundo, click, instante, etc
 
-    logic(test, suntest);
+    logic(test, suntest, clicks);
     
     refresh(test);
+    printf("%d", suntest);
 
 }
 
-void logic(int tablero[5][9], int soles){ 
+void logic(int tablero[5][9], int soles, int tiempo){ 
 
     //Movimiento 
     for (int i = 0; i < 5; i++){
