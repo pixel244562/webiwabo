@@ -1,3 +1,6 @@
+# Un .gitignore es un archivo en el cual se listan nombres de archivo o tipos de archivo
+# que git no debe subir al repositorio a la hora de hacer commit
+
 # Prerequisites
 *.d
 
@@ -5,7 +8,6 @@
 *.o
 *.ko
 *.obj
-*.elf
 
 # Linker output
 *.ilk
@@ -34,7 +36,6 @@
 *.app
 *.i*86
 *.x86_64
-*.hex
 
 # Debug files
 *.dSYM/
@@ -42,14 +43,19 @@
 *.idb
 *.pdb
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
-
 # debug information files
 *.dwo
+
+#lo de arriba era la plantilla basica del .gitignore para C
+
+#Posibles nombres pal ejecutable
+pvz
+juego
+main
+
+#necesario pal malloc
+core
+vgcore.*
+
+#pa que las configuraciones del vscode de uno no afecten al resto
+.vscode/
