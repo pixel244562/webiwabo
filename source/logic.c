@@ -32,7 +32,6 @@ void accion_zombies(estadojuego *juego){
                 delante->planta_actual->vida -= Z_DMG;
 
                 if (delante->planta_actual->vida <= 0){//Termina de comersela
-                    free(delante->planta_actual); //Al tratar con malloc es necesario liberar primero
                     delante->planta_actual = NULL; 
                 }
             }
