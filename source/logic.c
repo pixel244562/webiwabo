@@ -1,68 +1,85 @@
 #include <stdio.h>
+#include "global.h"
 
-void logic(int tablero[5][9], int soles, int tiempo);
-void refresh(int tablero[5][9]);
+void impacto(zombie * z, proyectil * p){
+    /*impacto:
+    Funcion que dado un zombie z y un proyectil p, resta
+    a la vida del zombie el daño infligido por el proyectil
+    */
+    z -> vida -= p -> dmg;
 
-int main(){ //Espacio de pruebas
-    int test[5][9] = {
-        {0, 0, 0, 0, 0, 3, 3, 3, 0},
-        {0, 0, 0, 0, 0, 0, 3, 0, 3},
-        {1, 1, 1, 0, 3, 0, 3, 0, 3},
-        {0, 0, 0, 0, 3, 3, 3, 3, 3},
-        {0, 0, 0, 0, 0, 0, 3, 3, 3}
-}; 
-    /*Matriz solo de prueba, considerare provisionalmente
-    0 = vacio
-    1 = girasol
-    2 = lanzaguisantes
-    3 = zombie normal
-    4 = flagged zombie */
-    int suntest = 20;
-    int clicks = 0;
-
-    /*Esqueleto para tests si llego a necesitar llenarla mientras se ejecuta
-    for (int i = 0; i < 5; i++){
-        for (int j = 0; j < 9; j++){
-            printf("Casilla %d,%d: ", i+1, j+1);
-            scanf("%d", &test[i][j]);
-        }
-    }*/
-
-    refresh(test);
-    printf("%d", suntest);
-
-    //Asumimos que paso un segundo, click, instante, etc
-
-    logic(test, suntest, clicks);
-    
-    refresh(test);
-    printf("%d", suntest);
-
-}
-
-void logic(int tablero[5][9], int soles, int tiempo){ 
-
-    //Movimiento 
-    for (int i = 0; i < 5; i++){
-        for (int j = 0; j < 9; j++){
-            if (tablero[i][j] == 3){ //Movimiento de zombie
-                tablero[i][j-1] = 3;
-                tablero[i][j] = 0;
-            }
-            if (tablero[i][j] == 4){ //Movimiento flagged zombie, temporalmente asumiremos que va de 2 en 2
-                tablero[i][j-2] = 4;
-                tablero[i][j] = 0;
-            }
-        }}
-
-}
-
-void refresh(int tablero[5][9]){ //Funcion para imprimir el tablero
-    for (int i = 0; i < 5; i++){
-        for (int j = 0; j < 9; j++){
-            printf("%d ", tablero[i][j]);
-        }
-        printf("\n");
+    if (z -> vida <= 0){
+        z -> activo = 0; //Zombie x_x - Adrián
     }
-    printf("\n");
+    p -> activo = 0; //El proyectil se va por cigarrillos
+}
+
+void accion_zombies(estadojuego *juego){
+    for (int i = 0; i < MAX_ZOMBIES; i++){
+        zombie *z = &juego->lista_zombies[i];
+
+        if (z->activo == 0) continue;                    //No hay zombie, pasa el siguiente
+        if (juego->ticks % z->velocidad != 0) continue;  // Aun no han pasado suficientes ticks para que actue
+
+        if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
+            z->activo = 0;
+            juego->vida_casa--;
+        }
+        else { //Intenta actuar o moverse
+            casilla *delante = &juego->tablero[z->fila][z->columna - 1]; //Puntero para la casilla siguiente
+
+            if (delante->planta_actual != NULL){//Si hay planta al frente, el zombie empezará a comersela
+                delante->planta_actual->vida -= Z_DMG;
+
+                if (delante->planta_actual->vida <= 0){//Termina de comersela
+                    free(delante->planta_actual); //Al tratar con malloc es necesario liberar primero
+                    delante->planta_actual = NULL; 
+                }
+            }
+            else {
+                z->columna--;//Avanza una celda
+            }
+        }
+    }
+}
+
+void comportamiento_plantas(estadojuego* juego) {
+    for (int i = 0; i < MAX_PLANTAS; i++) {
+        planta* p_actual = &juego->lista_plantas[i];
+
+        if (p_actual->vida > 0) {//La planta debe estar viva
+            
+            // LANZAGUISANTES
+            if (p_actual->tipo == LANZAGUISANTES) {
+                
+                if (juego->ticks % p_actual->cd == 0) {//Pasaron suficientes clicks para cumplir el cooldown
+                    
+                    // Disparo: Necesitamos generar un proyectil
+                    for (int j = 0; j < MAX_PROYECTILES; j++) {
+                        if (juego->lista_proyectiles[j].activo == 0) {
+                            juego->lista_proyectiles[j].activo = 1;
+                            juego->lista_proyectiles[j].fila = p_actual->fila;
+                            juego->lista_proyectiles[j].columna = p_actual->columna + 1; // Nace justo a la derecha del tubo
+                            juego->lista_proyectiles[j].dmg = 20;
+                            
+                            break; //Disparo unico, puedo adaptar la logica del lanza guisantes para por ejemplo una repetidora
+                            //O uno de esos que disparan en 3 filas a la vez (Esta sería mas facil) - Adrián
+                        }
+                    }
+                }
+            }
+            
+            //GIRASOL
+            else if (p_actual->tipo == GIRASOL) {
+                
+                if (juego->ticks % p_actual->cd == 0) {//Cooldown
+                    juego->soles += SOLES_GIRASOL;
+                }
+            }
+        }
+    }
+}
+
+void proyectil_update(){
+
 }
