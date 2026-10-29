@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "global.h"
+#include <global.h>
 
 void impacto(zombie * z, proyectil * p){
     /*impacto:
@@ -15,7 +15,6 @@ void impacto(zombie * z, proyectil * p){
 }
 
 void accion_zombies(estadojuego *juego){
-    for (int i = 0; i < MAX_ZOMBIES; i++){
         zombie *z = &juego->lista_zombies[i];
 
         if (z->activo == 0) continue;                    //No hay zombie, pasa el siguiente

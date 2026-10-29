@@ -1,0 +1,5 @@
+(personal)
+
+para compilar:
+distrobox enter raylib-dev
+make

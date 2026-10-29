@@ -1,5 +1,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
+
 #define FILAS 5
 #define COLUMNAS 9
 #define MAX_ZOMBIES 100
