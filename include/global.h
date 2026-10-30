@@ -1,14 +1,36 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
+
+//Base
 #define FILAS 5
 #define COLUMNAS 9
+#define MAX_PLANTAS (FILAS * COLUMNAS)
 #define MAX_ZOMBIES 100
 #define MAX_PROYECTILES 200
+#define CASA_HP_INICIAL 10
+#define SOLES_INICIALES 50
+//Zombies
 #define Z_DMG 20
-#define MAX_PLANTAS (FILAS * COLUMNAS)
+#define Z_NORMAL 3
+#define Z_FLAGGER 4
+//Plantas
 #define GIRASOL 3
 #define LANZAGUISANTES 4
+#define NUEZ 5
 #define SOLES_GIRASOL 25
+#define LANZAGUISANTES_DMG 20
+//Estado partida
+#define PARTIDA_JUGANDO 0
+#define PARTIDA_WIN 1
+#define PARTIDA_LOSS 2
+//Oleadas
+#define MAX_OLEADAS 4
+#define TICKS_DESCANSO 30
+#define TICKS_PREPARACION 60 //Inicio de partida, tiempo inicial para colocar plantas
+#define FASE_PREPARACION 0
+#define FASE_OLEADA 1
+#define FASE_DESCANSO 2
+#define FASE_FIN 3
 
 typedef struct {
     int tipo;
@@ -20,7 +42,7 @@ typedef struct {
 } zombie;
 
 typedef struct{
-    int tipo; //3 Lanzaguisantes, 4 girasol, 5 papa
+    int tipo;
     int vida;
     char fila;
     char columna;
@@ -42,17 +64,22 @@ typedef struct{
 
 typedef struct{
     casilla** tablero; //Tarea 1
-
     //Entidades
     zombie lista_zombies[MAX_ZOMBIES];
     proyectil lista_proyectiles[MAX_PROYECTILES];
     planta lista_plantas[MAX_PLANTAS];
 
     //Valores generales
+    int partida;
     int soles;
     int vida_casa;
-    int oleada;
     int ticks; //Reloj interno del juego para movimientos, cooldown, etc.
+
+    //Oleadas
+    int oleadas_restantes;
+    int fase;
+    int zombies_pendientes;
+    int ticks_oleada_actual;
 
 } estadojuego;
 #endif
