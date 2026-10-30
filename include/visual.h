@@ -3,6 +3,6 @@
 
 #include "global.h"
 
-void draw();
+void draw(estadojuego *juego);
 
 #endif

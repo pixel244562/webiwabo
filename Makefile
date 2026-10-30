@@ -5,7 +5,7 @@ CFLAGS = -Wall -Iinclude
 LIBS = $(shell pkg-config --libs --cflags raylib)
 
 # Archivos fuente y el nombre del ejecutable final
-SRC = source/main.c source/visual.c
+SRC = source/main.c source/visual.c source/logic.c
 TARGET = webiwabo.exe
 
 # Regla principal (se ejecuta al escribir solo 'make')

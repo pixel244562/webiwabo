@@ -15,31 +15,37 @@ void impacto(zombie * z, proyectil * p){
 }
 
 void accion_zombies(estadojuego *juego){
+    for(int i = 0; i < MAX_ZOMBIES; i++){
         zombie *z = &juego->lista_zombies[i];
-
-        if (z->activo == 0) continue;                    //No hay zombie, pasa el siguiente
-        if (juego->ticks % z->velocidad != 0) continue;  // Aun no han pasado suficientes ticks para que actue
-
-        if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
-            z->activo = 0;
-            juego->vida_casa--;
+        if(z->activo == 0) continue; //No hay zombie, pasa el siguiente
+        if(juego->ticks % z->velocidad != 0) continue;
+        if(z->columna > 0){
+            z->columna--;
         }
-        else { //Intenta actuar o moverse
-            casilla *delante = &juego->tablero[z->fila][z->columna - 1]; //Puntero para la casilla siguiente
+    } 
+    // Aun no han pasado suficientes ticks para que actue
+    /*
+    if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
+        z->activo = 0;
+        juego->vida_casa--;
+    }
+    else { //Intenta actuar o moverse
+        casilla *delante = &juego->tablero[z->fila][z->columna - 1]; //Puntero para la casilla siguiente
 
-            if (delante->planta_actual != NULL){//Si hay planta al frente, el zombie empezará a comersela
-                delante->planta_actual->vida -= Z_DMG;
+        if (delante->planta_actual != NULL){//Si hay planta al frente, el zombie empezará a comersela
+            delante->planta_actual->vida -= Z_DMG;
 
-                if (delante->planta_actual->vida <= 0){//Termina de comersela
-                    delante->planta_actual = NULL; 
-                }
+            if (delante->planta_actual->vida <= 0){//Termina de comersela
+                delante->planta_actual = NULL; 
             }
-            else {
-                z->columna--;//Avanza una celda
-            }
+        }
+        else {
+            z->columna--;//Avanza una celda
         }
     }
+    */
 }
+
 
 void comportamiento_plantas(estadojuego* juego) {
     for (int i = 0; i < MAX_PLANTAS; i++) {

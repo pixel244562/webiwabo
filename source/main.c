@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "global.h"
 #include "visual.h"
+#include "logic.h"
 #include <raylib.h>
 
 int main(){
@@ -15,11 +16,23 @@ int main(){
     juego.oleada = 1;
     juego.ticks = 0;
 
+    // inicio todos los zombies como inactivos
+    for (int i = 0; i < MAX_ZOMBIES; i++) {
+        juego.lista_zombies[i].activo = 0;
+    }
+
+    juego.lista_zombies[0].activo = 1;
+    juego.lista_zombies[0].tipo = 1;
+    juego.lista_zombies[0].vida = 100;
+    juego.lista_zombies[0].fila = 2;
+    juego.lista_zombies[0].columna = 8;
+    juego.lista_zombies[0].velocidad = 30;
+
     // game loop
     while (!WindowShouldClose()) {
-
+        accion_zombies(&juego);
         juego.ticks++;
-        draw();
+        draw(&juego);
     }
     CloseWindow();
 
