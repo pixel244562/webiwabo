@@ -18,17 +18,18 @@ void accion_zombies(estadojuego *juego){
     for(int i = 0; i < MAX_ZOMBIES; i++){
         zombie *z = &juego->lista_zombies[i];
         if(z->activo == 0) continue; //No hay zombie, pasa el siguiente
-        if(juego->ticks % z->velocidad != 0) continue;
+        if(juego->ticks % z->velocidad != 0) continue; // Aun no han pasado suficientes ticks para que actue
         if(z->columna > 0){
             z->columna--;
         }
-    } 
-    // Aun no han pasado suficientes ticks para que actue
-    /*
-    if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
+        if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
         z->activo = 0;
         juego->vida_casa--;
-    }
+        }
+    } 
+    
+    /*
+    
     else { //Intenta actuar o moverse
         casilla *delante = &juego->tablero[z->fila][z->columna - 1]; //Puntero para la casilla siguiente
 
@@ -84,6 +85,33 @@ void comportamiento_plantas(estadojuego* juego) {
     }
 }
 
-void proyectil_update(){
+void zombie_spawn(int x, int y, int type, estadojuego *juego){
+    int id;
+    // encuentra el primero espacio inactivo
+    for(int i = 0; i < MAX_ZOMBIES; i++){
+        zombie *z = &juego->lista_zombies[i];
+        if(z->activo == 0){
+            id = i;
+            break;
+        }
+    }
 
+    juego->lista_zombies[id].activo = 1;
+    juego->lista_zombies[id].tipo = type;
+    juego->lista_zombies[id].fila = y;
+    juego->lista_zombies[id].columna = x;
+    // define las caracteristicas de cada tipo de zombie
+    switch(type){
+        case 1:
+            juego->lista_zombies[id].vida = 100;
+            juego->lista_zombies[id].velocidad = 30;
+            break;
+        case 2:
+            juego->lista_zombies[id].vida = 150;
+            juego->lista_zombies[id].velocidad = 30;
+            break;
+    }
+}
+
+void proyectil_update(){
 }

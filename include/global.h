@@ -12,7 +12,7 @@
 #define SOLES_GIRASOL 25
 
 typedef struct {
-    int tipo;
+    int tipo; //1: común, 2: cono, 3: cubo, 4: bandera
     int vida;
     char fila;
     char columna;
