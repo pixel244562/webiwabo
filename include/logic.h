@@ -5,4 +5,9 @@
 
 void accion_zombies(estadojuego *juego);
 void zombie_spawn(int x, int y, int type, estadojuego *juego);
+void impacto(zombie * z, proyectil * p);
+void comportamiento_plantas(estadojuego* juego);
+void proyectil_update(estadojuego * juego);
+void update(estadojuego* juego);
+void place_plant(int x, int y, int type, estadojuego *juego);
 #endif

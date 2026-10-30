@@ -16,10 +16,10 @@ void draw(estadojuego *juego){
             }
         }
         
-        for (int i = 0; i<MAX_ZOMBIES; i++){
+        for(int i = 0; i<MAX_ZOMBIES; i++){
             zombie *z = &juego->lista_zombies[i];
         
-            if (z->activo){
+            if(z->activo){
                 int z_x = (z->columna * (tile_width + tile_offset)) + (tile_width / 2);
                 int z_y = (z->fila * (tile_width + tile_offset)) + (tile_width / 2);
                 switch(z->tipo){
@@ -34,7 +34,26 @@ void draw(estadojuego *juego){
                         else{
                             DrawCircle(z_x, z_y, 30, LIME); break;}
                 }
-                
+            }
+        }
+        for(int i = 0; i<MAX_PLANTAS; i++){
+            planta *p = &juego->lista_plantas[i];
+
+            if(p->activo){
+                int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2);
+                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2);
+                switch(p->tipo){
+                    case 1: // lanzaguizantes
+                        DrawCircle(p_x, p_y, 30, DARKGREEN); break;
+                }
+            }
+        }
+        for(int i = 0; i<MAX_PROYECTILES; i++){
+            proyectil *p = &juego->lista_proyectiles[i];
+            if(p->activo == 1){
+                int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2);
+                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2);
+                DrawCircle(p_x, p_y, 10, WHITE); break;
             }
         }
         
