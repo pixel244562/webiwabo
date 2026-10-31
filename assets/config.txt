@@ -1,0 +1,5 @@
+//Cada configuracion debe ser un par de clave-valor, separados por un espacio.
+
+CONFIGURACION 0
+CONFIGURACION_2 0
+CONFIGURACION_3 0
