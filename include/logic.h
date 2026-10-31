@@ -10,4 +10,5 @@ void comportamiento_plantas(estadojuego* juego);
 void proyectil_update(estadojuego * juego);
 void update(estadojuego* juego);
 void place_plant(int x, int y, int type, estadojuego *juego);
+
 #endif

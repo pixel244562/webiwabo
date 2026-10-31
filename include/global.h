@@ -21,7 +21,7 @@ typedef struct {
 } zombie;
 
 typedef struct{
-    int tipo; //3 Lanzaguisantes, 4 girasol, 5 papa
+    int tipo; //3 Lanzaguisantes, 4 girasol, 5 nuez
     int vida;
     char fila;
     char columna;

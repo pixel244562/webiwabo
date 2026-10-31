@@ -33,6 +33,16 @@ void draw(estadojuego *juego){
                         }
                         else{
                             DrawCircle(z_x, z_y, 30, LIME); break;}
+                    case 3: // zombie cubeta
+                        if(z->vida > 100){
+                            DrawCircle(z_x, z_y, 30, GRAY);
+                            DrawCircle(z_x, z_y, 23, LIME);
+                            break;
+                        }
+                        else{
+                            DrawCircle(z_x, z_y, 30, LIME); break;}
+                    case 4: // bandera
+                        DrawCircle(z_x, z_y, 20, LIME); break;
                 }
             }
         }
@@ -44,7 +54,11 @@ void draw(estadojuego *juego){
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2);
                 switch(p->tipo){
                     case 1: // lanzaguizantes
-                        DrawCircle(p_x, p_y, 30, DARKGREEN); break;
+                        DrawCircle(p_x, p_y, ((p->vida*30)/100), DARKGREEN); break;
+                    case 3: // nuez
+                        DrawCircle(p_x, p_y, ((p->vida*30)/200), BROWN);
+                        
+                        break;
                 }
             }
         }

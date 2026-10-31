@@ -20,33 +20,33 @@ void accion_zombies(estadojuego *juego){
 
         if(z->activo == 0) continue; //No hay zombie, pasa el siguiente
         if(juego->ticks % z->velocidad != 0) continue; // Aun no han pasado suficientes ticks para que actue
-        
-        if(z->columna > 0){
-            z->columna--;
-        }
+
         if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
-        z->activo = 0;
-        juego->vida_casa--;
-        }
-    } 
-    
-    /*
-    
-    else { //Intenta actuar o moverse
-        casilla *delante = &juego->tablero[z->fila][z->columna - 1]; //Puntero para la casilla siguiente
-
-        if (delante->planta_actual != NULL){//Si hay planta al frente, el zombie empezará a comersela
-            delante->planta_actual->vida -= Z_DMG;
-
-            if (delante->planta_actual->vida <= 0){//Termina de comersela
-                delante->planta_actual = NULL; 
+            z->activo = 0;
+            juego->vida_casa--;
+        } 
+        else { //Intenta actuar o moverse
+            planta *plant = NULL;
+            for (int p_id = 0; p_id < MAX_PLANTAS; p_id++) {
+                planta *p = &juego->lista_plantas[p_id];
+                if (p->activo && p->fila == z->fila && p->columna == z->columna - 1) {
+                    plant = p;
+                    break;
+                }
             }
-        }
-        else {
-            z->columna--;//Avanza una celda
+
+            if (plant != NULL) { // Si hay planta al frente, la empieza a comer
+                plant->vida -= Z_DMG;
+
+                if (plant->vida <= 0) { // Termina de comérsela
+                    plant->activo = 0;
+                }
+            }
+            else
+                z->columna--; // Avanza una celda
+
         }
     }
-    */
 }
 
 
@@ -126,6 +126,15 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
             juego->lista_zombies[id].vida = 150;
             juego->lista_zombies[id].velocidad = 70;
             break;
+        case 3:
+            juego->lista_zombies[id].vida = 200;
+            juego->lista_zombies[id].velocidad = 70;
+            break;
+        case 4:
+            juego->lista_zombies[id].vida = 100;
+            juego->lista_zombies[id].velocidad = 50;
+            break;
+
     }
 }
 
@@ -144,14 +153,18 @@ void place_plant(int x, int y, int type, estadojuego *juego){
     juego->lista_plantas[id].fila = y;
     juego->lista_plantas[id].columna = x;
     // define las caracteristicas de cada tipo de planta
-    switch(type){ // 1 Lanzaguisantes, 2 girasol, 3 papa
+    switch(type){ // 1 Lanzaguisantes, 2 girasol, 3 nuez
         case 1: 
             juego->lista_plantas[id].vida = 100;
             juego->lista_plantas[id].cd = 30;
             break;
         case 2:
-            juego->lista_plantas[id].vida = 150;
+            juego->lista_plantas[id].vida = 100;
             juego->lista_plantas[id].cd = 60;
+            break;
+        case 3:
+            juego->lista_plantas[id].vida = 200;
+            juego->lista_plantas[id].cd = 0;
             break;
     }
 }
@@ -164,6 +177,20 @@ void proyectil_update(estadojuego * juego){
 
         if (proyectil_actual->activo == 0) continue;
         
+        //IMPACTO
+        for (int j= 0; j < MAX_ZOMBIES; j ++){
+            zombie* zombie_actual = &juego -> lista_zombies[j];
+
+            if (zombie_actual -> activo == 0) continue; // ¿Zombie activo?
+            if (zombie_actual->fila != proyectil_actual->fila) continue; // ¿Igual fila?
+            if (zombie_actual->columna == proyectil_actual->columna) { // ¿Igual columa?
+                impacto(zombie_actual, proyectil_actual); // impacta
+                break;
+            }
+        }
+
+        if (proyectil_actual->activo == 0) continue;
+        
         //MOVIMIENTO
         proyectil_actual -> columna ++;
 
@@ -173,22 +200,7 @@ void proyectil_update(estadojuego * juego){
             continue;
         }
 
-        //IMPACTO
-        for (int j= 0; j < MAX_ZOMBIES; j ++){
-            zombie* zombie_actual = &juego -> lista_zombies[j];
-
-            //Chequeo activo
-
-            if (zombie_actual -> activo == 0) continue;
-
-            //Chequeo ubicacion
-
-            if ((zombie_actual -> columna != proyectil_actual -> columna) ||
-             (zombie_actual -> fila != proyectil_actual -> fila)) continue;
-
-            impacto(zombie_actual, proyectil_actual);
-            break;
-        }
+        
     }
 }
 
