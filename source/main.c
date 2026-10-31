@@ -5,7 +5,7 @@
 #include <raylib.h>
 
 int main(){
-    const int width = 800;
+    const int width = 800+300;
     const int height = 440;
     InitWindow(width, height, "webi wabo");
     SetTargetFPS(30);
