@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <global.h>
 
+void resultado(estadojuego* juego){
+    if (juego -> vida_casa <= 0){
+        juego -> partida = PARTIDA_LOSS;
+    }
+
+    if ((juego -> oleadas_restantes == 0) && (juego -> zombies_pendientes == 0)){
+        juego -> partida = PARTIDA_WIN;
+    }
+}
+
 void impacto(zombie * z, proyectil * p){
     /*impacto:
     Funcion que dado un zombie z y un proyectil p, resta
@@ -211,10 +221,6 @@ void update(estadojuego* juego){
     accion_zombies(juego);
     comportamiento_plantas(juego);
     //waves(juego); 
-
+    resultado(juego);
     juego -> ticks++;
-    if(juego->ticks>1000)
-        juego->ticks=0;
-
-    //resultado(juego);
 }
