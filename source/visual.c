@@ -215,7 +215,7 @@ void draw(estadojuego *juego){
         // resultado
         if(juego->partida == PARTIDA_LOSS){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
-            DrawText(TextFormat("THE ZOMBIES ATE YOUR BRAINS!", juego->ticks), 20, 10+80, 60, GREEN);
+            DrawText(TextFormat("THE ZOMBIES ATE YOUR BRAINS!", juego->ticks), 20, 10+80, 60, WHITE);
         }
         
 

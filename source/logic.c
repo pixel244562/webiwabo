@@ -11,6 +11,27 @@ void resultado(estadojuego* juego){
     }
 }
 
+void sortZombieByRank(estadojuego* juego){   
+    zombie* z_arr = juego -> lista_zombies;
+    zombie aux;
+    int i, j;
+
+    for (i = 1; i < MAX_ZOMBIES; i++) {
+        /* Si ya esta en su posicion, se salta sin copiar nada */
+        if (z_arr[i - 1].fila <= z_arr[i].fila)
+            continue;
+
+        aux = z_arr[i];
+        j = i - 1;
+
+        while (j >= 0 && z_arr[j].fila > aux.fila) {
+            z_arr[j + 1] = z_arr[j];
+            j--;
+        }
+        z_arr[j + 1] = aux;
+    }
+}
+
 void impacto(zombie * z, proyectil * p){
     /*impacto:
     Funcion que dado un zombie z y un proyectil p, resta
@@ -146,6 +167,7 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
             break;
 
     }
+    sortZombieByRank(juego);
 }
 
 void place_plant(int x, int y, int type, estadojuego *juego){

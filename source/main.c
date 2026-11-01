@@ -33,8 +33,8 @@ int main(){
     place_plant(0,1,1, &juego);
     place_plant(6,2,3, &juego);
     zombie_spawn(8,2,1, &juego);
-    zombie_spawn(7,1,2, &juego);
-    zombie_spawn(7,4,2, &juego);
+    zombie_spawn(8,1,2, &juego);
+    zombie_spawn(8,4,2, &juego);
     zombie_spawn(8,0,3, &juego);
     //zombie_spawn(7,3,4, &juego);
     // carga las texturas

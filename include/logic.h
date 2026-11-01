@@ -11,5 +11,6 @@ void proyectil_update(estadojuego * juego);
 void update(estadojuego* juego);
 void place_plant(int x, int y, int type, estadojuego *juego);
 void resultado(estadojuego* juego);
+void sortZombieByRank(estadojuego* juego);
 
 #endif
