@@ -1,8 +1,10 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
+
+#include <raylib.h>
 //Window
-#define SCREEN_WIDTH 800+300
-#define SCREEN_HEIGHT 440
+#define SCREEN_WIDTH 800+1120
+#define SCREEN_HEIGHT 1080
 //Base
 #define FILAS 5
 #define COLUMNAS 9
@@ -65,6 +67,20 @@ typedef struct{
     zombie lista_zombies[MAX_ZOMBIES];
     proyectil lista_proyectiles[MAX_PROYECTILES];
     planta lista_plantas[MAX_PLANTAS];
+
+    //Texturas
+    Texture2D bucket_texture;
+    Texture2D cone_texture;
+    Texture2D garlic_texture;
+    Texture2D lawn_texture;
+    Texture2D pea_texture;
+    Texture2D peashooter_texture;
+    Texture2D sun_texture;
+    Texture2D sunflower_texture;
+    Texture2D wall_nut_1_texture;
+    Texture2D wall_nut_2_texture;
+    Texture2D wall_nut_3_texture;
+    Texture2D zombie_texture;
 
     //Valores generales
     int partida;

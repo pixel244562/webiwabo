@@ -6,6 +6,7 @@
 
 int main(){
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "webi wabo");
+    ToggleFullscreen();
     SetTargetFPS(30);
 
     estadojuego juego;
@@ -15,6 +16,7 @@ int main(){
     juego.partida = PARTIDA_JUGANDO;
     juego.oleadas_restantes = MAX_OLEADAS; // O el número que uses
     juego.zombies_pendientes = 0;          // O la cantidad inicial
+
     // zombies inactivos
     for (int i = 0; i < MAX_ZOMBIES; i++) {
         juego.lista_zombies[i].activo = 0;
@@ -33,14 +35,17 @@ int main(){
     zombie_spawn(8,2,1, &juego);
     zombie_spawn(7,1,2, &juego);
     zombie_spawn(8,1,3, &juego);
-    zombie_spawn(2,3,4, &juego);
-
+    zombie_spawn(7,3,4, &juego);
+    // carga las texturas
+    texture_load(&juego);
     // game loop
     while (!WindowShouldClose()) {
         update(&juego); 
         draw(&juego);
     }
     CloseWindow();
+
+    texture_unload(&juego);
 
     return 0;
 }
