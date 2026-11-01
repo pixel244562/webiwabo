@@ -183,3 +183,25 @@ void update(estadojuego* juego){
     resultado(juego);
 }
 
+void sortZombieByRank(estadojuego* juego)
+{   
+    zombie* z_arr = juego -> lista_zombies;
+    zombie aux;
+    int i, j;
+
+    for (i = 1; i < MAX_ZOMBIES; i++) {
+        /* Si ya esta en su posicion, se salta sin copiar nada */
+        if (z_arr[i - 1].fila <= z_arr[i].fila)
+            continue;
+
+        aux = z_arr[i];
+        j = i - 1;
+
+        while (j >= 0 && z_arr[j].fila > aux.fila) {
+            z_arr[j + 1] = z_arr[j];
+            j--;
+        }
+        z_arr[j + 1] = aux;
+    }
+}
+
