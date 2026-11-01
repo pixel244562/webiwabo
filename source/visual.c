@@ -37,9 +37,10 @@ void draw(estadojuego *juego){
     BeginDrawing();
         ClearBackground(BLACK); // limpia la pantalla
 
-        int tile_width = 80;
-        int tile_offset = 10;
-        int move_x = 300;
+        int tile_width = 190;
+        int tile_offset = 5;
+        int move_x = 360;
+        int move_y = 70;
 
         /* Para dibujar texturas:
         DrawTexture(Texture2D texture, int posX, int posY, Color tint);   
@@ -47,28 +48,35 @@ void draw(estadojuego *juego){
 
         DrawTexture(juego->lawn_texture, 0, 0, WHITE);
 
+        /* // (para visualizar dimensiones)
         // dibuja el tablero
         for(int y = 0; y<FILAS; y++){
             for(int x = 0; x<COLUMNAS; x++){
-                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset), tile_width, tile_width, (Color){ 182, 255, 92, 255 });
-                DrawRectangle(x*(tile_width+tile_offset)+move_x + tile_width-5, y*(tile_width+tile_offset) + tile_width-5, 5, 5, RED);
-                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset), 5, 5, BLUE);
+                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset)+move_y, tile_width, tile_width, (Color){ 182, 255, 92, 100 });
+                DrawRectangle(x*(tile_width+tile_offset)+move_x + tile_width-5, y*(tile_width+tile_offset) + tile_width-5 +move_y, 5, 5, RED);
+                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset)+move_y, 5, 5, BLUE);
             }
         }
-
+        */
         // dibuja plantas
         for(int i = 0; i<MAX_PLANTAS; i++){
             planta *p = &juego->lista_plantas[i];
 
             if(p->activo){
                 int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
-                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2);
+                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y;
                 switch(p->tipo){
                     case 1: // lanzaguizantes
-                        DrawCircle(p_x, p_y, ((p->vida*30)/100), DARKGREEN); break;
+                        DrawTexture(juego->peashooter_texture, p_x-120, p_y-120, WHITE); break;
                     case 3: // nuez
-                        DrawCircle(p_x, p_y, ((p->vida*30)/200), BROWN);
-                        
+                        if(p->vida >= 150){
+                            DrawTexture(juego->wall_nut_1_texture, p_x-90, p_y-120, WHITE);
+                        }
+                        else if(p->vida >= 100){
+                            DrawTexture(juego->wall_nut_2_texture, p_x-90, p_y-120, WHITE);
+                        }
+                        else
+                            DrawTexture(juego->wall_nut_3_texture, p_x-90, p_y-120, WHITE);
                         break;
                 }
             }
@@ -78,27 +86,27 @@ void draw(estadojuego *juego){
             zombie *z = &juego->lista_zombies[i];
         
             if(z->activo){
-                int z_x = (z->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
-                int z_y = (z->fila * (tile_width + tile_offset)) + (tile_width / 2);
+                int z_x = (z->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x-110;
+                int z_y = (z->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y-210;
                 switch(z->tipo){
                     case 1: // zombie común
-                        DrawCircle(z_x, z_y, 30, LIME); break;
+                        DrawTexture(juego->zombie_texture,z_x, z_y, WHITE); break;
                     case 2: // zombie cono
                         if(z->vida > 100){
-                            DrawCircle(z_x, z_y, 30, ORANGE);
-                            DrawCircle(z_x, z_y, 23, LIME);
+                            DrawTexture(juego->zombie_texture, z_x, z_y, WHITE);
+                            DrawTexture(juego->cone_texture, z_x-20, z_y-95, WHITE);
                             break;
                         }
                         else{
-                            DrawCircle(z_x, z_y, 30, LIME); break;}
+                            DrawTexture(juego->zombie_texture,z_x, z_y, WHITE); break;}
                     case 3: // zombie cubeta
                         if(z->vida > 100){
-                            DrawCircle(z_x, z_y, 30, LIGHTGRAY);
-                            DrawCircle(z_x, z_y, 23, LIME);
+                            DrawTexture(juego->zombie_texture,z_x, z_y, WHITE);
+                            DrawTexture(juego->bucket_texture, z_x-20, z_y-80, WHITE);
                             break;
                         }
                         else{
-                            DrawCircle(z_x, z_y, 30, LIME); break;}
+                            DrawTexture(juego->zombie_texture,z_x, z_y, WHITE); break;}
                     case 4: // bandera
                         DrawCircle(z_x, z_y, 20, LIME); break;
                 }
@@ -109,7 +117,7 @@ void draw(estadojuego *juego){
             proyectil *p = &juego->lista_proyectiles[i];
             if(p->activo == 1){
                 int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
-                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2);
+                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y;
                 DrawCircle(p_x, p_y, 10, WHITE); break;
             }
         }
