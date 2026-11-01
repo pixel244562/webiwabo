@@ -19,6 +19,12 @@
 #define NUEZ 5
 #define SOLES_GIRASOL 25
 #define LANZAGUISANTES_DMG 20
+#define COSTO_GIRASOL 50
+#define COSTO_LANZAGUISANTES 100
+#define COSTO_NUEZ 50
+#define VIDA_GIRASOL 0
+#define VIDA_LANZAGUISANTES 0
+#define VIDA_NUEZ 0
 //Estado partida
 #define PARTIDA_JUGANDO 0
 #define PARTIDA_WIN 1
