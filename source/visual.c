@@ -87,7 +87,7 @@ void draw(estadojuego *juego){
                         if(p->vida >= 150){
                             DrawTextureEx(
                                 juego->wall_nut_1_texture, 
-                                (Vector2){ (float)(p_x - 90), (float)(p_y) }, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
                                 WHITE
@@ -96,7 +96,7 @@ void draw(estadojuego *juego){
                         else if(p->vida >= 100){
                             DrawTextureEx(
                                 juego->wall_nut_2_texture, 
-                                (Vector2){ (float)(p_x - 90), (float)(p_y) }, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
                                 WHITE
@@ -105,7 +105,7 @@ void draw(estadojuego *juego){
                         else
                             DrawTextureEx(
                                 juego->wall_nut_3_texture, 
-                                (Vector2){ (float)(p_x - 90), (float)(p_y) }, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
                                 WHITE
@@ -119,7 +119,7 @@ void draw(estadojuego *juego){
             zombie *z = &juego->lista_zombies[i];
         
             if(z->activo){
-                int z_x = (z->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
+                int z_x = (int)z->pos_x;
                 int z_y = (z->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y-190;
                 switch(z->tipo){
                     case 1: // zombie común

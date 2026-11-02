@@ -46,31 +46,41 @@ void accion_zombies(estadojuego *juego){
         zombie *z = &juego->lista_zombies[i];
 
         if(z->activo == 0) continue; //No hay zombie, pasa el siguiente
-        if(juego->ticks % z->velocidad != 0) continue; // Aun no han pasado suficientes ticks para que actue
-
-        if (z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
+        
+        if(z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
             z->activo = 0;
             juego->vida_casa--;
         } 
-        else { //Intenta actuar o moverse
+        else{ //Intenta actuar o moverse
             planta *plant = NULL;
-            for (int p_id = 0; p_id < MAX_PLANTAS; p_id++) {
+            for(int p_id = 0; p_id < MAX_PLANTAS; p_id++){
                 planta *p = &juego->lista_plantas[p_id];
-                if (p->activo && p->fila == z->fila && p->columna == z->columna - 1) {
-                    plant = p;
-                    break;
+                if(p->activo && p->fila == z->fila){
+
+                    float p_pos_x = (float)((p->columna * (tile_width + tile_offset)) + move_x - 100);
+                    // comprueba que ell zombie esté a la derecha y sea menor a distancia x de la planta + el margen
+                    if (z->pos_x >= p_pos_x && z->pos_x <= p_pos_x + tile_width + 60.0f) {
+                        plant = p;
+                        break;
+                    }
                 }
             }
 
             if (plant != NULL) { // Si hay planta al frente, la empieza a comer
-                plant->vida -= Z_DMG;
+                if(juego->ticks % z->velocidad == 0){
+                    plant->vida -= Z_DMG;
 
-                if (plant->vida <= 0) { // Termina de comérsela
-                    plant->activo = 0;
+                    if (plant->vida <= 0) { // Termina de comérsela
+                        plant->activo = 0;
+                    }
                 }
+                
             }
-            else
-                z->columna--; // Avanza una celda
+            else{
+                z->pos_x -= 0.75f;
+                z->columna = (int)((z->pos_x - move_x + 100) / (tile_width + tile_offset));
+            }
+                
 
         }
     }
@@ -82,11 +92,12 @@ void spawn_sun(int x, int y, int move, estadojuego* juego){
         // encuentra un espacio disponible
         if(obj->tipo == 0){
             if(move == 1){
-                obj->move = 1;
+                obj->move = 1; // el sol tiene que caer
                 obj->destino_y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
                 obj->y = -300;
             }
             else{
+                obj->move = 0; // sol estático
                 obj->y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
             }
             obj->tipo = 1; // asigna como sol
@@ -158,28 +169,29 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
             break;
         }
     }
-
-    juego->lista_zombies[id].activo = 1;
-    juego->lista_zombies[id].tipo = type;
-    juego->lista_zombies[id].fila = y;
-    juego->lista_zombies[id].columna = x;
+    zombie* z = &juego->lista_zombies[id];
+    z->activo = 1;
+    z->tipo = type;
+    z->fila = y;
+    z->columna = x;
+    z->pos_x = (float)((x * (tile_width + tile_offset)) + move_x - 100);
     // define las caracteristicas de cada tipo de zombie
     switch(type){
         case 1: // regular zombie
-            juego->lista_zombies[id].vida = 100;
-            juego->lista_zombies[id].velocidad = 100;
+            z->vida = 100;
+            z->velocidad = 100;
             break;
         case 2: // cone head
-            juego->lista_zombies[id].vida = 150;
-            juego->lista_zombies[id].velocidad = 100;
+            z->vida = 150;
+            z->velocidad = 100;
             break;
         case 3: // bucket head
-            juego->lista_zombies[id].vida = 200;
-            juego->lista_zombies[id].velocidad = 100;
+            z->vida = 200;
+            z->velocidad = 100;
             break;
         case 4: // flag
-            juego->lista_zombies[id].vida = 100;
-            juego->lista_zombies[id].velocidad = 70;
+            z->vida = 100;
+            z->velocidad = 70;
             break;
 
     }
@@ -255,7 +267,7 @@ void proyectil_update(estadojuego * juego){
 void waves(int oleadas, estadojuego* juego){
     int tiempo_oleada;
     if(juego->oleada_actual == 0){
-        tiempo_oleada = 250;
+        tiempo_oleada = 300;
     }
     else
         tiempo_oleada = 700;

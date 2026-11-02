@@ -45,6 +45,7 @@ typedef struct {
     char columna;
     char activo;
     char velocidad; //Cada cuantos ticks el zombie ejecuta una acción SIEMPRE OCUPARLO CON VALORES >= 1 o cosas raras podrían pasar
+    float pos_x; // posición exacta (px)
 } zombie;
 
 typedef struct{
@@ -59,8 +60,8 @@ typedef struct{
 typedef struct{
     int activo;
     int dmg;
-    char fila;
-    char columna;
+    char fila; // fila de pasto
+    char columna; // columna de pasto
 } proyectil;
 
 typedef struct{
