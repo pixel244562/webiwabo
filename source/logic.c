@@ -76,6 +76,25 @@ void accion_zombies(estadojuego *juego){
     }
 }
 
+void spawn_sun(int x, int y, int move, estadojuego* juego){
+    for(int i = 0; i < MAX_INTERACTUABLES; i++){
+        objeto *obj = &juego->lista_objetos[i];
+        // encuentra un espacio disponible
+        if(obj->tipo == 0){
+            if(move == 1){
+                obj->move = 1;
+                obj->destino_y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
+                obj->y = -300;
+            }
+            else{
+                obj->y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
+            }
+            obj->tipo = 1; // asigna como sol
+            obj->x = x;
+            break;
+        }
+    }
+}
 
 void comportamiento_plantas(estadojuego* juego) {
     for (int i = 0; i < MAX_PLANTAS; i++) {
@@ -117,10 +136,11 @@ void comportamiento_plantas(estadojuego* juego) {
             
             //GIRASOL
             else if (p_actual->tipo == 2) {
-                
-                if (juego->ticks % p_actual->cd == 0) {//Cooldown
-                    juego->soles += SOLES_GIRASOL;
+                if (p_actual->cd == 0) {//Cooldown
+                    spawn_sun(p_actual->columna, p_actual->fila, 0, juego);
+                    p_actual->cd = 90;
                 }
+                p_actual->cd--;
             }
         }
         else
@@ -288,28 +308,8 @@ int sun_cost( int plant_id, estadojuego* juego){
     return coste;
 }
 
-void spawn_sun(int x, int y, int move, estadojuego* juego){
-    for(int i = 0; i < MAX_INTERACTUABLES; i++){
-        objeto *obj = &juego->lista_objetos[i];
-        // encuentra un espacio disponible
-        if(obj->tipo == 0){
-            if(move == 1){
-                obj->move = 1;
-                obj->destino_y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
-                obj->y = -300;
-            }
-            else{
-                obj->y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
-            }
-            obj->tipo = 1; // asigna como sol
-            obj->x = x;
-            break;
-        }
-    }
-}
-
 void naturally_spawn_sun(estadojuego *juego){
-    if(juego->ticks%300==0){
+    if(juego->ticks%300==299){
         spawn_sun(GetRandomValue(0,7),GetRandomValue(0,4),1,juego);
     }
     // disminuye la y de los soles hasta llegar al destino

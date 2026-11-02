@@ -55,28 +55,26 @@ void procesar_entrada(estadojuego* juego){
                     }
                 }
             }
-            // ¿collect sun
-            for(int i=0; i<MAX_INTERACTUABLES; i++){
-                objeto *obj = &juego->lista_objetos[i];
-                // reemplazar por circulo de colisión
-
-                // Check if point is inside circle
-                //     bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);
-                int obj_x = (obj->x * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
-                int obj_y = obj->y;
-                float centro_x = obj_x + (juego->sun_texture.width * rescale) / 2.0f;
-                float centro_y = obj_y + (juego->sun_texture.height * rescale) / 2.0f;
-                if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
-                    obj->tipo = 0;
-                    juego->soles+=25;
-                }
-                
-            }
         }
         else{
             juego->ultimo_clic_fila = -1;
             juego->ultimo_clic_columna = -1;
             juego->selected_seed = 0; // apretas fuera del pasto, dejas de seleccionar la semilla
+        }
+        // collect sun
+        for(int i=0; i<MAX_INTERACTUABLES; i++){
+            objeto *obj = &juego->lista_objetos[i];
+
+            // Check if point is inside circle
+            //     bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);
+            int obj_x = (obj->x * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
+            int obj_y = obj->y;
+            float centro_x = obj_x + (juego->sun_texture.width * rescale) / 2.0f;
+            float centro_y = obj_y + (juego->sun_texture.height * rescale) / 2.0f;
+            if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
+                obj->tipo = 0;
+                juego->soles+=25;
+            } 
         }
     }
 }
