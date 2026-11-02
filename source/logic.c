@@ -151,19 +151,19 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
     switch(type){
         case 1:
             juego->lista_zombies[id].vida = 100;
-            juego->lista_zombies[id].velocidad = 70;
+            juego->lista_zombies[id].velocidad = 100;
             break;
         case 2:
             juego->lista_zombies[id].vida = 150;
-            juego->lista_zombies[id].velocidad = 70;
+            juego->lista_zombies[id].velocidad = 100;
             break;
         case 3:
             juego->lista_zombies[id].vida = 200;
-            juego->lista_zombies[id].velocidad = 70;
+            juego->lista_zombies[id].velocidad = 100;
             break;
         case 4:
             juego->lista_zombies[id].vida = 100;
-            juego->lista_zombies[id].velocidad = 50;
+            juego->lista_zombies[id].velocidad = 70;
             break;
 
     }
@@ -188,11 +188,11 @@ void place_plant(int x, int y, int type, estadojuego *juego){
     switch(type){ // 1 Lanzaguisantes, 2 girasol, 3 nuez
         case 1: 
             juego->lista_plantas[id].vida = 100;
-            juego->lista_plantas[id].cd = 30;
+            juego->lista_plantas[id].cd = 60;
             break;
         case 2:
             juego->lista_plantas[id].vida = 100;
-            juego->lista_plantas[id].cd = 60;
+            juego->lista_plantas[id].cd = 90;
             break;
         case 3:
             juego->lista_plantas[id].vida = 200;
@@ -235,6 +235,30 @@ void proyectil_update(estadojuego * juego){
         
     }
 }
+
+int sun_cost( int plant_id, estadojuego* juego){
+    int coste;
+    switch(plant_id){
+        case 1: // peashooter
+            coste = 100; break;
+        case 2: // sunflower
+            coste = 50; break;
+        case 3: // wall-nut
+            coste = 50; break;
+        case 4: // garlic
+           coste = 50; break;
+        default:
+            coste = 0;
+    }
+    if(juego->soles < coste){
+        // coste negativo se interpreta como insuficiente
+        coste = -1;
+    }
+    else
+        juego->soles = juego->soles-coste;
+    return coste;
+}
+
 
 void update(estadojuego* juego){
     //if (juego -> partida != PARTIDA_JUGANDO) return;

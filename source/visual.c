@@ -70,7 +70,7 @@ void draw(estadojuego *juego){
             if(p->activo){
                 int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y-100;
-                switch(p->tipo){a
+                switch(p->tipo){
                     case 1: // lanzaguizantes
                         DrawTextureEx(
                             juego->peashooter_texture, 

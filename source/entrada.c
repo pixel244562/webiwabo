@@ -46,8 +46,10 @@ void procesar_entrada(estadojuego* juego){
                         }
                     }
                 }
-                if(can_plant == 1)
-                    place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
+                if(can_plant == 1){
+                    if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0)
+                        place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
+                }
             }
         }
         else{
