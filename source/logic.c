@@ -5,10 +5,6 @@ void resultado(estadojuego* juego){
     if (juego -> vida_casa <= 0){
         juego -> partida = PARTIDA_LOSS;
     }
-
-    if ((juego -> oleadas_restantes == 0) && (juego -> zombies_pendientes == 0)){
-        juego -> partida = PARTIDA_WIN;
-    }
 }
 
 void sortZombieByRank(estadojuego* juego){   
@@ -95,7 +91,7 @@ void comportamiento_plantas(estadojuego* juego) {
                     int shoot_signal = 0;
                     for(int id = 0; id<MAX_ZOMBIES; id++){
                         zombie *z = &juego->lista_zombies[id];
-                        if(z->activo && z->fila == p_actual->fila){
+                        if(z->activo && z->fila == p_actual->fila && z->columna < COLUMNAS){
                             shoot_signal = 1;
                             break;
                         }
@@ -149,19 +145,19 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
     juego->lista_zombies[id].columna = x;
     // define las caracteristicas de cada tipo de zombie
     switch(type){
-        case 1:
+        case 1: // regular zombie
             juego->lista_zombies[id].vida = 100;
             juego->lista_zombies[id].velocidad = 100;
             break;
-        case 2:
+        case 2: // cone head
             juego->lista_zombies[id].vida = 150;
             juego->lista_zombies[id].velocidad = 100;
             break;
-        case 3:
+        case 3: // bucket head
             juego->lista_zombies[id].vida = 200;
             juego->lista_zombies[id].velocidad = 100;
             break;
-        case 4:
+        case 4: // flag
             juego->lista_zombies[id].vida = 100;
             juego->lista_zombies[id].velocidad = 70;
             break;
@@ -236,6 +232,39 @@ void proyectil_update(estadojuego * juego){
     }
 }
 
+void waves(int oleadas, estadojuego* juego){
+    int tiempo_oleada;
+    if(juego->oleada_actual == 0){
+        tiempo_oleada = 250;
+    }
+    else
+        tiempo_oleada = 700;
+    if (juego -> oleada_actual <= oleadas){
+        juego -> ticks_oleada_actual++;
+        if (juego -> ticks_oleada_actual >= tiempo_oleada){
+            // void zombie_spawn(int x, int y, int type, estadojuego *juego);
+            // int GetRandomValue(int min, int max); Get a random value between min and max (both included)
+            // 1 zombie bandera
+            zombie_spawn(
+                GetRandomValue(9,15), // x
+                GetRandomValue(0,4), // y
+                4, // flag zombie
+                juego
+            );
+            for(int i=0; i<5; i++){
+                zombie_spawn(
+                    GetRandomValue(9,15), // x
+                    GetRandomValue(0,4), // y
+                    GetRandomValue(1,3), // type
+                    juego
+                );
+            }
+            juego->ticks_oleada_actual = 0;
+            juego->oleada_actual++;
+        }
+    }
+}
+
 int sun_cost( int plant_id, estadojuego* juego){
     int coste;
     switch(plant_id){
@@ -266,7 +295,7 @@ void update(estadojuego* juego){
     proyectil_update(juego);
     accion_zombies(juego);
     comportamiento_plantas(juego);
-    //waves(juego); 
+    waves(4,juego);
     resultado(juego);
     juego -> ticks++;
 }

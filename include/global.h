@@ -7,7 +7,7 @@
 #define SCREEN_HEIGHT 1080
 //Base
 #define FILAS 5
-#define COLUMNAS 9
+#define COLUMNAS 8
 #define MAX_PLANTAS ((FILAS) * (COLUMNAS))
 #define MAX_ZOMBIES 100
 #define MAX_SEEDS 3
@@ -95,9 +95,8 @@ typedef struct{
     int seed_slot[MAX_SEEDS];
 
     //Oleadas
-    int oleadas_restantes;
+    int oleada_actual;
     int fase;
-    int zombies_pendientes;
     int ticks_oleada_actual;
 
 } estadojuego;

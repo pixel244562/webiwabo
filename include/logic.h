@@ -13,5 +13,6 @@ void place_plant(int x, int y, int type, estadojuego *juego);
 void resultado(estadojuego* juego);
 void sortZombieByRank(estadojuego* juego);
 int sun_cost( int plant_id, estadojuego* juego);
+void waves(int oleadas, estadojuego *juego);
 
 #endif

@@ -193,7 +193,14 @@ void draw(estadojuego *juego){
                             );
                             break;}
                     case 4: // bandera
-                        DrawCircle(z_x, z_y, 20, LIME); break;
+                        DrawTextureEx(
+                            juego->zombie_texture, 
+                            (Vector2){ (float)(z_x), (float)(z_y) }, 
+                            0.0f,
+                            rescale,
+                            GRAY
+                        );
+                        break;
                 }
             }
         }

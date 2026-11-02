@@ -15,8 +15,10 @@ int main(){
     juego.vida_casa = CASA_HP_INICIAL;
     juego.ticks = 0;
     juego.partida = PARTIDA_JUGANDO;
-    juego.oleadas_restantes = MAX_OLEADAS; // O el número que uses
-    juego.zombies_pendientes = 0;          // O la cantidad inicial
+    // oleadas
+    juego.ticks_oleada_actual = 0;
+    juego.oleada_actual = 0;
+    // semillas
     juego.selected_seed = 0;
     // semillas seleccionadas por defecto
     juego.seed_slot[0] = 1;
@@ -34,10 +36,6 @@ int main(){
     for (int i = 0; i < MAX_PROYECTILES; i++) {
         juego.lista_proyectiles[i].activo = 0;
     }
-    zombie_spawn(8,2,1, &juego);
-    zombie_spawn(8,1,2, &juego);
-    zombie_spawn(8,0,3, &juego);
-    //zombie_spawn(7,3,4, &juego);
     // carga las texturas
     texture_load(&juego);
     // game loop
