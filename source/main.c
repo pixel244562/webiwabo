@@ -2,6 +2,7 @@
 #include "global.h"
 #include "visual.h"
 #include "logic.h"
+#include "entrada.h"
 #include <raylib.h>
 
 int main(){
@@ -16,7 +17,11 @@ int main(){
     juego.partida = PARTIDA_JUGANDO;
     juego.oleadas_restantes = MAX_OLEADAS; // O el número que uses
     juego.zombies_pendientes = 0;          // O la cantidad inicial
-
+    juego.selected_seed = 0;
+    // semillas seleccionadas por defecto
+    juego.seed_slot[0] = 1;
+    juego.seed_slot[1] = 2;
+    juego.seed_slot[2] = 3;
     // zombies inactivos
     for (int i = 0; i < MAX_ZOMBIES; i++) {
         juego.lista_zombies[i].activo = 0;
@@ -29,9 +34,6 @@ int main(){
     for (int i = 0; i < MAX_PROYECTILES; i++) {
         juego.lista_proyectiles[i].activo = 0;
     }
-
-    place_plant(0,1,1, &juego);
-    place_plant(6,2,3, &juego);
     zombie_spawn(8,2,1, &juego);
     zombie_spawn(8,1,2, &juego);
     zombie_spawn(8,4,2, &juego);
@@ -41,6 +43,7 @@ int main(){
     texture_load(&juego);
     // game loop
     while (!WindowShouldClose()) {
+        procesar_entrada(&juego);
         update(&juego); 
         draw(&juego);
     }

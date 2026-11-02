@@ -10,6 +10,7 @@
 #define COLUMNAS 9
 #define MAX_PLANTAS ((FILAS) * (COLUMNAS))
 #define MAX_ZOMBIES 100
+#define MAX_SEEDS 3
 #define MAX_PROYECTILES 200
 #define CASA_HP_INICIAL 1
 #define SOLES_INICIALES 50
@@ -87,6 +88,11 @@ typedef struct{
     int soles;
     int vida_casa;
     int ticks; //Reloj interno del juego para movimientos, cooldown, etc.
+
+    int ultimo_clic_fila;
+    int ultimo_clic_columna;
+    int selected_seed;
+    int seed_slot[MAX_SEEDS];
 
     //Oleadas
     int oleadas_restantes;

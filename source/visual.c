@@ -63,7 +63,6 @@ void draw(estadojuego *juego){
             }
         }
         */
-        
         // dibuja plantas
         for(int i = 0; i<MAX_PLANTAS; i++){
             planta *p = &juego->lista_plantas[i];
@@ -71,10 +70,19 @@ void draw(estadojuego *juego){
             if(p->activo){
                 int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y-100;
-                switch(p->tipo){
+                switch(p->tipo){a
                     case 1: // lanzaguizantes
                         DrawTextureEx(
                             juego->peashooter_texture, 
+                            (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
+                            0.0f,
+                            rescale,
+                            WHITE
+                        );
+                        break;
+                    case 2:
+                        DrawTextureEx(
+                            juego->sunflower_texture, 
                             (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
                             0.0f,
                             rescale,
@@ -212,6 +220,51 @@ void draw(estadojuego *juego){
         // ticks y gametime
         DrawText(TextFormat("ticks: %d", juego->ticks), 10, 10+20, 20, LIGHTGRAY);
         DrawText(TextFormat("%d:%d:%d",(juego->ticks/(30*30))%60, (juego->ticks/30)%60, (juego->ticks)%60), 10, 10+40, 20, LIGHTGRAY);
+        // ultimo mouse clic (en coordenadas de pasto) -1 quiere decir fuera del pasto
+        DrawText(TextFormat("Grass Click: (%d, %d)", juego->ultimo_clic_fila, juego->ultimo_clic_columna), 10, 10+60, 20, GREEN);
+        // semilla seleccionada (numero de slot)
+        DrawText(TextFormat("Selected Seed: %d", juego->selected_seed), 10, 10+80, 20, GREEN);
+        switch(juego->selected_seed){
+            case 1:
+                switch(juego->seed_slot[0]){
+                    case 1:
+                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
+                    case 2:
+                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
+                    case 3:
+                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
+                    default:
+                        DrawText("None", 10, 10+100, 20, GREEN);
+                }
+                break;
+            case 2:
+                switch(juego->seed_slot[1]){
+                    case 1:
+                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
+                    case 2:
+                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
+                    case 3:
+                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
+                    default:
+                        DrawText("None", 10, 10+100, 20, GREEN);
+                }
+                break;
+            case 3:
+                switch(juego->seed_slot[2]){
+                    case 1:
+                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
+                    case 2:
+                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
+                    case 3:
+                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
+                    default:
+                        DrawText("None", 10, 10+100, 20, GREEN);
+                }
+                break;
+            default:
+                DrawText("None", 10, 10+100, 20, GREEN);
+        }
+        
         // resultado
         if(juego->partida == PARTIDA_LOSS){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
