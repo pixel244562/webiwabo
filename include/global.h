@@ -9,9 +9,10 @@
 #define FILAS 5
 #define COLUMNAS 8
 #define MAX_PLANTAS ((FILAS) * (COLUMNAS))
-#define MAX_ZOMBIES 100
+#define MAX_ZOMBIES 50
 #define MAX_SEEDS 3
-#define MAX_PROYECTILES 200
+#define MAX_PROYECTILES 100
+#define MAX_INTERACTUABLES 20
 #define CASA_HP_INICIAL 1
 #define SOLES_INICIALES 50
 //Zombies
@@ -57,17 +58,17 @@ typedef struct{
 } proyectil;
 
 typedef struct{
-    int tipo; //0: Cesped, esto puede sernos util para despues añadir obstaculos y más modos de juego - Adrián
-    planta* planta_actual;
-} casilla;
+    int x;
+    int y;
+    int tipo; // 1: sol
+} objeto;
 
 typedef struct{
-    casilla** tablero; //Tarea 1
-
     //Entidades
     zombie lista_zombies[MAX_ZOMBIES];
     proyectil lista_proyectiles[MAX_PROYECTILES];
     planta lista_plantas[MAX_PLANTAS];
+    objeto lista_objetos[MAX_INTERACTUABLES];
 
     //Texturas
     Texture2D bucket_texture;

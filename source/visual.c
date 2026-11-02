@@ -213,6 +213,24 @@ void draw(estadojuego *juego){
                 DrawTexture(juego->pea_texture,p_x, p_y, WHITE);
             }
         }
+        for(int i = 0; i<MAX_INTERACTUABLES; i++){
+            objeto *obj = &juego->lista_objetos[i];
+            switch(obj->tipo){
+                case 1:
+                    int obj_x = (obj->x * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
+                    int obj_y = (obj->y * (tile_width + tile_offset)) + (tile_width / 2) + move_y-85;
+                    DrawTextureEx(
+                            juego->sun_texture, 
+                            (Vector2){ (float)(obj_x), (float)(obj_y) }, 
+                            0.0f,
+                            rescale,
+                            WHITE
+                        );
+                    break;
+                default:
+                    break;
+            }
+        }
         /* funciones utiles:
         void DrawText(const char *text, int posX, int posY, int fontSize, Color color); Draw text (using default font)
         const char *TextFormat(const char *text, ...); Text formatting with variables (sprintf() style)

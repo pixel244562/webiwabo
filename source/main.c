@@ -36,6 +36,11 @@ int main(){
     for (int i = 0; i < MAX_PROYECTILES; i++) {
         juego.lista_proyectiles[i].activo = 0;
     }
+    // objetos tipo 0
+    for (int i = 0; i < MAX_INTERACTUABLES; i++) {
+        juego.lista_objetos[i].tipo = 0;
+    }
+    spawn_sun(0,0,&juego);
     // carga las texturas
     texture_load(&juego);
     // game loop
