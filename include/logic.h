@@ -14,6 +14,7 @@ void resultado(estadojuego* juego);
 void sortZombieByRank(estadojuego* juego);
 int sun_cost( int plant_id, estadojuego* juego);
 void waves(int oleadas, estadojuego *juego);
-void spawn_sun(int x, int y, estadojuego* juego);
+void spawn_sun(int x, int y, int move, estadojuego* juego);
+void naturally_spawn_sun(estadojuego *juego);
 
 #endif

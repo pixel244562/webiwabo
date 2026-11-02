@@ -288,15 +288,41 @@ int sun_cost( int plant_id, estadojuego* juego){
     return coste;
 }
 
-void spawn_sun(int x, int y, estadojuego* juego){
+void spawn_sun(int x, int y, int move, estadojuego* juego){
     for(int i = 0; i < MAX_INTERACTUABLES; i++){
         objeto *obj = &juego->lista_objetos[i];
+        // encuentra un espacio disponible
         if(obj->tipo == 0){
-            // encuentra un espacio disponible
+            if(move == 1){
+                obj->move = 1;
+                obj->destino_y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
+                obj->y = -300;
+            }
+            else{
+                obj->y = (y*(tile_width+tile_offset))+(tile_width/2)+move_y-85;
+            }
             obj->tipo = 1; // asigna como sol
             obj->x = x;
-            obj->y = y;
             break;
+        }
+    }
+}
+
+void naturally_spawn_sun(estadojuego *juego){
+    if(juego->ticks%300==0){
+        spawn_sun(GetRandomValue(0,7),GetRandomValue(0,4),1,juego);
+    }
+    // disminuye la y de los soles hasta llegar al destino
+    for(int i=0; i<MAX_INTERACTUABLES; i++){
+        objeto *obj = &juego->lista_objetos[i];
+        if(obj->tipo == 1 && obj->move == 1){ // si es sol y puede moverse
+            if(obj->y < obj->destino_y){
+                obj->y += 5;
+            }
+            else{
+                obj->y = obj->destino_y;
+                obj->move = 0;
+            }
         }
     }
 }
@@ -308,6 +334,7 @@ void update(estadojuego* juego){
     accion_zombies(juego);
     comportamiento_plantas(juego);
     waves(4,juego);
+    naturally_spawn_sun(juego);
     resultado(juego);
     juego -> ticks++;
 }

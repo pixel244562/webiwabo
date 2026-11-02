@@ -21,7 +21,8 @@ void procesar_entrada(estadojuego* juego){
         juego->selected_seed = 3;
     }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    // left click actions
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         // obtenemos la posición del mouse
         Vector2 mouse_pos = GetMousePosition();
         
@@ -30,11 +31,12 @@ void procesar_entrada(estadojuego* juego){
         int columna = (mouse_pos.x - move_x) / (tile_width+tile_offset);
         
         Rectangle grass = {move_x, move_y, (tile_width+tile_offset)*8, (tile_width+tile_offset)*5};
-        if (CheckCollisionPointRec(mouse_pos, grass)) {      
+        if(CheckCollisionPointRec(mouse_pos, grass)) {      
             juego->ultimo_clic_fila = fila;
             juego->ultimo_clic_columna = columna;
+
             // si hay semilla seleccionada intenta plantarla
-            if (juego->selected_seed != 0){
+            if(juego->selected_seed != 0){
                 char can_plant = 1;
                 // reviso que no existan plantas activas en la misma posición que se quiera plantar
                 for(int i = 0; i<MAX_PLANTAS; i++){
@@ -47,9 +49,28 @@ void procesar_entrada(estadojuego* juego){
                     }
                 }
                 if(can_plant == 1){
-                    if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0)
+                    if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
                         place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
+                        juego->selected_seed = 0;
+                    }
                 }
+            }
+            // ¿collect sun
+            for(int i=0; i<MAX_INTERACTUABLES; i++){
+                objeto *obj = &juego->lista_objetos[i];
+                // reemplazar por circulo de colisión
+
+                // Check if point is inside circle
+                //     bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);
+                int obj_x = (obj->x * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
+                int obj_y = obj->y;
+                float centro_x = obj_x + (juego->sun_texture.width * rescale) / 2.0f;
+                float centro_y = obj_y + (juego->sun_texture.height * rescale) / 2.0f;
+                if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
+                    obj->tipo = 0;
+                    juego->soles+=25;
+                }
+                
             }
         }
         else{

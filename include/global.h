@@ -6,6 +6,12 @@
 #define SCREEN_WIDTH 800+1120
 #define SCREEN_HEIGHT 1080
 //Base
+#define tile_width 180
+#define tile_offset 5
+#define move_x 445
+#define move_y 150
+#define rescale 0.9f // 10% más pequeño
+
 #define FILAS 5
 #define COLUMNAS 8
 #define MAX_PLANTAS ((FILAS) * (COLUMNAS))
@@ -60,7 +66,9 @@ typedef struct{
 typedef struct{
     int x;
     int y;
+    int destino_y;
     int tipo; // 1: sol
+    int move; // 0: don't move 1: move
 } objeto;
 
 typedef struct{

@@ -37,12 +37,6 @@ void draw(estadojuego *juego){
     BeginDrawing();
         ClearBackground(BLACK); // limpia la pantalla
 
-        int tile_width = 180;
-        int tile_offset = 5;
-        int move_x = 445;
-        int move_y = 150;
-        float rescale = 0.9f; // 10% más pequeño
-
         /* Para dibujar texturas:
         DrawTexture(Texture2D texture, int posX, int posY, Color tint);   
             // Draw a Texture2D
@@ -218,14 +212,17 @@ void draw(estadojuego *juego){
             switch(obj->tipo){
                 case 1:
                     int obj_x = (obj->x * (tile_width + tile_offset)) + (tile_width / 2) + move_x-100;
-                    int obj_y = (obj->y * (tile_width + tile_offset)) + (tile_width / 2) + move_y-85;
+                    int obj_y = obj->y;
+
                     DrawTextureEx(
-                            juego->sun_texture, 
-                            (Vector2){ (float)(obj_x), (float)(obj_y) }, 
-                            0.0f,
-                            rescale,
-                            WHITE
-                        );
+                        juego->sun_texture, 
+                        (Vector2){ (float)(obj_x), (float)(obj_y) }, 
+                        0.0f,
+                        rescale,
+                        WHITE
+                    );
+                    // para visualizar la colisisión de recogida con clic
+                    // DrawCircle(centro_x, centro_y,90,(Color){ 182, 255, 92, 100 });
                     break;
                 default:
                     break;
@@ -287,6 +284,7 @@ void draw(estadojuego *juego){
                 }
                 break;
             default:
+
                 DrawText("None", 10, 10+100, 20, GREEN);
         }
         
