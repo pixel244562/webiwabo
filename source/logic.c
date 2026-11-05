@@ -58,7 +58,7 @@ void accion_zombies(estadojuego *juego){
                 if(p->activo && p->fila == z->fila){
 
                     float p_pos_x = (float)((p->columna * (tile_width + tile_offset)) + move_x - 100);
-                    // comprueba que ell zombie esté a la derecha y sea menor a distancia x de la planta + el margen
+                    // comprueba que el zombie esté a la derecha y sea menor a distancia x de la planta + el margen
                     if (z->pos_x >= p_pos_x && z->pos_x <= p_pos_x + tile_width + 60.0f) {
                         plant = p;
                         break;
@@ -129,11 +129,13 @@ void comportamiento_plantas(estadojuego* juego) {
                     // Disparo: Necesitamos generar un proyectil
                     if(shoot_signal == 1){
                         for(int j = 0; j < MAX_PROYECTILES; j++) {
-                            if (juego->lista_proyectiles[j].activo == 0) {
-                                juego->lista_proyectiles[j].activo = 1;
-                                juego->lista_proyectiles[j].fila = p_actual->fila;
-                                juego->lista_proyectiles[j].columna = p_actual->columna + 1; // Nace justo a la derecha del tubo
-                                juego->lista_proyectiles[j].dmg = 20;
+                            proyectil *proyectil_actual = &juego->lista_proyectiles[j];
+                            if (proyectil_actual->activo == 0) {
+                                proyectil_actual->activo = 1;
+                                proyectil_actual->fila = p_actual->fila;
+                                proyectil_actual->pos_x = (float)((p_actual->columna * (tile_width + tile_offset)) + move_x);
+                                proyectil_actual->columna = p_actual->columna; // Inicializamos su columna lógica
+                                proyectil_actual->dmg = 20;
                             
                                 break; //Disparo unico, puedo adaptar la logica del lanza guisantes para por ejemplo una repetidora
                                 //O uno de esos que disparan en 3 filas a la vez (Esta sería mas facil) - Adrián
@@ -216,11 +218,11 @@ void place_plant(int x, int y, int type, estadojuego *juego){
     switch(type){ // 1 Lanzaguisantes, 2 girasol, 3 nuez
         case 1: 
             juego->lista_plantas[id].vida = 100;
-            juego->lista_plantas[id].cd = 60;
+            juego->lista_plantas[id].cd = 75;
             break;
         case 2:
             juego->lista_plantas[id].vida = 100;
-            juego->lista_plantas[id].cd = 90;
+            juego->lista_plantas[id].cd = 700;
             break;
         case 3:
             juego->lista_plantas[id].vida = 200;
@@ -237,24 +239,28 @@ void proyectil_update(estadojuego * juego){
 
         if (proyectil_actual->activo == 0) continue;
         
+        /*MOVIMIENTO
+        Primero, cambia la posición en pixeles,
+        luego, es transformado a posición en columnas del tablero tipo entero.
+        */
+        proyectil_actual->pos_x += 14.0f;
+        proyectil_actual->columna = (int)((proyectil_actual->pos_x - move_x + 100) / (tile_width + tile_offset));
+
         //IMPACTO
         for (int j= 0; j < MAX_ZOMBIES; j ++){
             zombie* zombie_actual = &juego -> lista_zombies[j];
 
-            if (zombie_actual -> activo == 0) continue; // ¿Zombie activo?
+            if (zombie_actual-> activo == 0) continue; // ¿Zombie activo?
             if (zombie_actual->fila != proyectil_actual->fila) continue; // ¿Igual fila?
             if (zombie_actual->columna == proyectil_actual->columna) { // ¿Igual columa?
                 impacto(zombie_actual, proyectil_actual); // impacta
+                proyectil_actual -> activo = 0;
                 break;
             }
         }
 
         if (proyectil_actual->activo == 0) continue;
         
-        //MOVIMIENTO
-        proyectil_actual -> columna ++;
-
-
         if (proyectil_actual -> columna >= COLUMNAS){
             proyectil_actual -> activo = 0;
             continue;

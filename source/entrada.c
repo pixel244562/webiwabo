@@ -76,5 +76,6 @@ void procesar_entrada(estadojuego* juego){
                 juego->soles+=25;
             } 
         }
+        
     }
 }
