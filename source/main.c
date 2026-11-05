@@ -42,12 +42,16 @@ int main(){
     }
     // carga las texturas
     texture_load(&juego);
+    // carga la musica
+    music_load(&juego);
     // game loop
     while (!WindowShouldClose()) {
         procesar_entrada(&juego);
         update(&juego); 
+        music_update(&juego);
         draw(&juego);
     }
+    music_unload(&juego);
     CloseWindow();
 
     texture_unload(&juego);
