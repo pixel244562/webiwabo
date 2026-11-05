@@ -13,18 +13,23 @@
 void procesar_entrada(estadojuego* juego){
     if (IsKeyPressed(KEY_ONE)){
         juego->selected_seed = 1;
+        ShowCursor();
     }
     if (IsKeyPressed(KEY_TWO)){
         juego->selected_seed = 2;
+        ShowCursor();
     }
     if (IsKeyPressed(KEY_THREE)){
         juego->selected_seed = 3;
+        ShowCursor();
     }
     if (IsKeyPressed(KEY_FOUR)){
         juego->selected_seed = 4;
+        ShowCursor();
     }
     if (IsKeyPressed(KEY_FIVE)){
         juego->selected_seed = 5;
+        ShowCursor();
     }
 
     // input mouse
