@@ -209,7 +209,7 @@ void draw(estadojuego *juego){
                             );
                         break;
                     case 4:
-                        if(p->vida >= 200){ // 400 / 2
+                        if(p->vida >= 100){
                             DrawTextureEx(
                                 juego->garlic_texture, 
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
@@ -218,7 +218,7 @@ void draw(estadojuego *juego){
                                 WHITE
                             );
                         }
-                        else if(p->vida >= 150){ // 400 / 3 con bastante aproximación
+                        else if(p->vida >= 50){
                             DrawTextureEx(
                                 juego->garlic_texture_2, 
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 

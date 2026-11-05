@@ -274,7 +274,7 @@ void place_plant(int x, int y, int type, estadojuego *juego){
             juego->lista_plantas[id].cd = 0;
             break;
         case 4:
-            juego->lista_plantas[id].vida = 400;
+            juego->lista_plantas[id].vida = 200;
             juego->lista_plantas[id].cd = 0;
             break;
         case 5:
