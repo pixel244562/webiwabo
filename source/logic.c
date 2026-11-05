@@ -89,7 +89,7 @@
                     
                 }
                 else{
-                    z->pos_x -= 0.75f;
+                    z->pos_x -= 0.50f;
                     z->columna = (int)((z->pos_x - move_x + 100) / (tile_width + tile_offset));
                 }
 
@@ -193,19 +193,19 @@
         switch(type){
             case 1: // regular zombie
                 z->vida = 100;
-                z->velocidad = 100;
+                z->velocidad = 60;
                 break;
             case 2: // cone head
                 z->vida = 150;
-                z->velocidad = 100;
+                z->velocidad = 60;
                 break;
             case 3: // bucket head
                 z->vida = 200;
-                z->velocidad = 100;
+                z->velocidad = 60;
                 break;
             case 4: // flag
                 z->vida = 100;
-                z->velocidad = 70;
+                z->velocidad = 60;
                 break;
 
         }

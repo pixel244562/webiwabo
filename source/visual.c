@@ -14,6 +14,7 @@ void texture_load(estadojuego *juego){ // convierte las imagenes en texturas par
     juego->pea_texture = LoadTexture("assets/pea.png");
     juego->fire_pea_texture = LoadTexture("assets/fire_pea.png");
     juego->sun_texture = LoadTexture("assets/sun.png");
+    juego->shovel_texture = LoadTexture("assets/shovel.png");
     //plantas
     juego->peashooter_texture = LoadTexture("assets/peashooter.png");
     juego->sunflower_texture = LoadTexture("assets/sunflower.png");
@@ -44,6 +45,7 @@ void texture_unload(estadojuego *juego){ // cierra las texturas
     UnloadTexture(juego->pea_texture);
     UnloadTexture(juego->fire_pea_texture);
     UnloadTexture(juego->sun_texture);
+    UnloadTexture(juego->shovel_texture);
     //plantas
     UnloadTexture(juego->peashooter_texture);
     UnloadTexture(juego->sunflower_texture);
@@ -139,6 +141,7 @@ void draw(estadojuego *juego){
         // rectangulo para visualizar forma de colisión rectangular de semillas
         //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
         //DrawRectangle(150,150+175,230,162, (Color){ 182, 255, 92, 100 });
+        //{move_x*8, move_y*8, (tile_width+tile_offset), (tile_width+tile_offset)};
 
         // dibuja plantas
         for(int i = 0; i<MAX_PLANTAS; i++){
@@ -369,8 +372,26 @@ void draw(estadojuego *juego){
             0.7f,
             WHITE
         );
+        // dibuja la pala
+        DrawTextureEx(
+            juego->shovel_texture, 
+            (Vector2){ 1760.0f, 900.0f}, 
+            0.0f,
+            0.55f,
+            WHITE
+        );
+
         DrawText(TextFormat("%d", juego->soles), 171, 42, 95, GRAY);
         DrawText(TextFormat("%d", juego->soles), 170, 40, 90, WHITE);
+        if(juego->selected_seed==6){ // si agarra la pala
+            DrawTextureEx(
+                juego->shovel_texture, 
+                (Vector2){ juego->mouse_pos.x-50.0f, juego->mouse_pos.y-50.0f}, 
+                0.0f,
+                0.55f,
+                WHITE
+            );
+        }
 
         /* funciones utiles:
         void DrawText(const char *text, int posX, int posY, int fontSize, Color color); Draw text (using default font)

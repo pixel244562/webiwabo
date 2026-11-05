@@ -27,22 +27,37 @@ void procesar_entrada(estadojuego* juego){
         juego->selected_seed = 5;
     }
 
+    // input mouse
+
+    // obtenemos la posición del mouse
+    juego->mouse_pos = GetMousePosition();
+
+    // pala
+    Rectangle shovel_rect = {7*(tile_width+tile_offset)+move_x,
+        4*(tile_width+tile_offset)+move_y,
+        (tile_width+tile_offset),
+        (tile_width+tile_offset)
+    };
+
     // left click actions
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        // obtenemos la posición del mouse
-        Vector2 mouse_pos = GetMousePosition();
         
         // calculo la fila y columna de la casilla donde se hizo click
-        int fila = (mouse_pos.y - move_y) / (tile_width+tile_offset);
-        int columna = (mouse_pos.x - move_x) / (tile_width+tile_offset);
-        
+        int fila = (juego->mouse_pos.y - move_y) / (tile_width+tile_offset);
+        int columna = (juego->mouse_pos.x - move_x) / (tile_width+tile_offset);
+
+        if(CheckCollisionPointRec(juego->mouse_pos, shovel_rect) && juego->selected_seed == 0){
+            juego->selected_seed = 6; // agarra la pala
+            HideCursor();
+        }
+
         Rectangle grass = {move_x, move_y, (tile_width+tile_offset)*8, (tile_width+tile_offset)*5};
-        if(CheckCollisionPointRec(mouse_pos, grass)) {      
+        if(CheckCollisionPointRec(juego->mouse_pos, grass)) {      
             juego->ultimo_clic_fila = fila;
             juego->ultimo_clic_columna = columna;
 
             // si hay semilla seleccionada intenta plantarla
-            if(juego->selected_seed != 0){
+            if(juego->selected_seed != 0 && juego->selected_seed != 6){
                 char can_plant = 1;
                 // reviso que no existan plantas activas en la misma posición que se quiera plantar
                 for(int i = 0; i<MAX_PLANTAS; i++){
@@ -61,11 +76,26 @@ void procesar_entrada(estadojuego* juego){
                     }
                 }
             }
+            // la pala desactiva la planta
+            if(juego->selected_seed == 6){
+                for(int i = 0; i<MAX_PLANTAS; i++){
+                    planta *p = &juego->lista_plantas[i];
+                    if(p->activo == 1){
+                        if(p->columna == columna && p->fila == fila){
+                            p->activo = 0;
+                            juego->selected_seed = 0;
+                            ShowCursor();
+                        }
+                    }
+                }
+            }
+            
         }
         else{
             juego->ultimo_clic_fila = -1;
             juego->ultimo_clic_columna = -1;
             juego->selected_seed = 0; // apretas fuera del pasto, dejas de seleccionar la semilla
+            ShowCursor();
         }
         // collect sun
         for(int i=0; i<MAX_INTERACTUABLES; i++){
@@ -77,7 +107,7 @@ void procesar_entrada(estadojuego* juego){
             int obj_y = obj->y;
             float centro_x = obj_x + (juego->sun_texture.width * rescale) / 2.0f;
             float centro_y = obj_y + (juego->sun_texture.height * rescale) / 2.0f;
-            if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
+            if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(juego->mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
                 obj->tipo = 0;
                 juego->soles+=25;
             } 
@@ -85,7 +115,7 @@ void procesar_entrada(estadojuego* juego){
         // select seed
         for(int i = 0; i<5; i++){
             Rectangle seed_rect = {150,150+175*i,230,162};
-            if(CheckCollisionPointRec(mouse_pos, seed_rect)){
+            if(CheckCollisionPointRec(juego->mouse_pos, seed_rect)){
                 switch(i){
                     case 0:
                         juego->selected_seed = 1; break;
@@ -101,7 +131,9 @@ void procesar_entrada(estadojuego* juego){
             }
 
         }
+
     }
+
 }
 
 // soundtrack

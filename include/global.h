@@ -89,6 +89,7 @@ typedef struct{
     Texture2D pea_texture;
     Texture2D fire_pea_texture;
     Texture2D sun_texture;
+    Texture2D shovel_texture;
     //  plantas
     Texture2D peashooter_texture;
     Texture2D sunflower_texture;
@@ -114,6 +115,7 @@ typedef struct{
 
     int ultimo_clic_fila;
     int ultimo_clic_columna;
+    Vector2 mouse_pos;
     int selected_seed;
     int seed_slot[MAX_SEEDS];
 
