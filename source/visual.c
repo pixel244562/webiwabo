@@ -16,6 +16,13 @@ void texture_load(estadojuego *juego){ // convierte las imagenes en texturas par
     juego->wall_nut_2_texture = LoadTexture("assets/wall-nut_2.png");
     juego->wall_nut_3_texture = LoadTexture("assets/wall-nut_3.png");
     juego->zombie_texture = LoadTexture("assets/zombie.png");
+    //semillas
+    juego->garlic_seed_texture = LoadTexture("assets/seeds/garlic.png");
+    juego->peashooter_seed_texture = LoadTexture("assets/seeds/peashooter.png");
+    juego->sunflower_seed_texture = LoadTexture("assets/seeds/sunflower.png");
+    juego->torchwood_seed_texture = LoadTexture("assets/seeds/torchwood.png");
+    juego->wall_nut_seed_texture = LoadTexture("assets/seeds/wall-nut.png");
+
 }
 
 void texture_unload(estadojuego *juego){ // cierra las texturas
@@ -31,6 +38,12 @@ void texture_unload(estadojuego *juego){ // cierra las texturas
     UnloadTexture(juego->wall_nut_2_texture);
     UnloadTexture(juego->wall_nut_3_texture);
     UnloadTexture(juego->zombie_texture);
+    //semillas
+    UnloadTexture(juego->garlic_seed_texture);
+    UnloadTexture(juego->peashooter_seed_texture);
+    UnloadTexture(juego->sunflower_seed_texture);
+    UnloadTexture(juego->torchwood_seed_texture);
+    UnloadTexture(juego->wall_nut_seed_texture);
 }
 
 void draw(estadojuego *juego){
@@ -57,6 +70,59 @@ void draw(estadojuego *juego){
             }
         }
         */
+        // dibujar las semillas con su coste
+        const int h = 150, h2 = 25;
+        // h+h2 = 175
+        DrawTextureEx(
+            juego->peashooter_seed_texture, 
+            (Vector2){ 150.0f, (float)h }, 
+            0.0f, 
+            0.7f, 
+            WHITE
+        );
+        DrawText("100", 301, 242, 75, GRAY);
+        DrawText("100", 300, 240, 70, WHITE);
+
+        DrawTextureEx(
+            juego->sunflower_seed_texture, 
+            (Vector2){ 150.0f, (float)(h*2 + h2) }, 
+            0.0f, 
+            0.7f, 
+            WHITE
+        );
+        DrawText("50", 301+20, 242+h+h2+3, 75, GRAY);
+        DrawText("50", 300+20, 240+h+h2+3, 70, WHITE);
+        DrawTextureEx(
+            juego->wall_nut_seed_texture, 
+            (Vector2){ 150.0f, (float)(h*3 + (h2*2)) }, 
+            0.0f, 
+            0.7f, 
+            WHITE
+        );
+        DrawText("50", 301+20, 242+(h+h2)*2+3, 75, GRAY);
+        DrawText("50", 300+20, 240+(h+h2)*2+3, 70, WHITE);
+        DrawTextureEx(
+            juego->garlic_seed_texture, 
+            (Vector2){ 150.0f, (float)(h*4 + (h2*3)) }, 
+            0.0f, 
+            0.7f, 
+            WHITE
+        );
+        DrawText("50", 301+20, 242+(h+h2)*3+3, 75, GRAY);
+        DrawText("50", 300+20, 240+(h+h2)*3+3, 70, WHITE);
+        DrawTextureEx(
+            juego->torchwood_seed_texture, 
+            (Vector2){ 150.0f, (float)(h*5 + (h2*4)) }, 
+            0.0f, 
+            0.7f, 
+            WHITE
+        );
+        DrawText("125", 301, 242+(h+h2)*4+3, 75, GRAY);
+        DrawText("125", 300, 240+(h+h2)*4+3, 70, WHITE);
+
+        // rectangulo para visualizar forma de colisión rectangular de semillas
+        //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
+
         // dibuja plantas
         for(int i = 0; i<MAX_PLANTAS; i++){
             planta *p = &juego->lista_plantas[i];
@@ -202,7 +268,7 @@ void draw(estadojuego *juego){
         for(int i = 0; i<MAX_PROYECTILES; i++){
             proyectil *p = &juego->lista_proyectiles[i];
             if(p->activo == 1){
-                int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x -100;
+                int p_x = (int)p->pos_x;
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y -120;
                 DrawTexture(juego->pea_texture,p_x, p_y, WHITE);
             }

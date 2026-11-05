@@ -62,6 +62,7 @@ typedef struct{
     int dmg;
     char fila; // fila de pasto
     char columna; // columna de pasto
+    float pos_x; // posición exacta (px)
 } proyectil;
 
 typedef struct{
@@ -92,6 +93,12 @@ typedef struct{
     Texture2D wall_nut_2_texture;
     Texture2D wall_nut_3_texture;
     Texture2D zombie_texture;
+    //  semillas
+    Texture2D garlic_seed_texture;
+    Texture2D peashooter_seed_texture;
+    Texture2D sunflower_seed_texture;
+    Texture2D torchwood_seed_texture;
+    Texture2D wall_nut_seed_texture;
 
     //Valores generales
     int partida;
