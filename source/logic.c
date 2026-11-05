@@ -264,6 +264,39 @@ void proyectil_update(estadojuego * juego){
     }
 }
 
+static int elegir_tipo_zombie(int num_oleada){
+    /*Devuelve:
+    1 -> Zombie normal
+    2 -> Zombie con cono
+    3 -> Zombie con cubeta
+    */
+    int porc_especial;
+    int porc_cubeta;
+    
+    //Primero, cada oleada, la probabilidad de que spawnee un zombie especial(Con cubeta o cono, por ahora) va aumentando
+    if (num_oleada < 1){
+        porc_especial = 10;
+    }
+    else{
+        porc_especial = 20 + 15 * (num_oleada - 1);
+    }
+    if(porc_especial > 80){ //El maximo porcentajes de especiales lo defini en 80% como maximo
+        porc_especial = 80;
+    }
+
+    if(GetRandomValue(1, 100) > porc_especial ) return 1; //Primera tirada, ¿es normal o especial?
+    //Si arroja un percentil mayor al asignado a los zombies especiales, retorna 1 (Normal)
+
+    //Zombie con cubeta, pasando esa primera tirada, la funcion retornara 2 (Cono) o 3 (Cubeta)
+    porc_cubeta = 4 + 4 * num_oleada;
+    if (porc_cubeta > 30){
+        porc_cubeta = 30;
+    }
+
+    if (GetRandomValue(1,100) <= porc_cubeta) return 3; //En una segunda tirada, si cae en el percentil de cubeta, retorna 3(Cubeta)
+    return 2; //Sino, retorna 2 (Cono)
+}
+
 void waves(int oleadas, estadojuego* juego){
     int tiempo_oleada;
     if(juego->oleada_actual == 0){
@@ -287,7 +320,7 @@ void waves(int oleadas, estadojuego* juego){
                 zombie_spawn(
                     GetRandomValue(9,15), // x
                     GetRandomValue(0,4), // y
-                    GetRandomValue(1,3), // type
+                    elegir_tipo_zombie(juego->oleada_actual), // type
                     juego
                 );
             }
