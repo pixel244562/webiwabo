@@ -76,6 +76,24 @@ void procesar_entrada(estadojuego* juego){
                 juego->soles+=25;
             } 
         }
-        
+        // select seed
+        for(int i = 0; i<5; i++){
+            Rectangle seed_rect = {150,150+175*i,230,162};
+            if(CheckCollisionPointRec(mouse_pos, seed_rect)){
+                switch(i){
+                    case 0:
+                        juego->selected_seed = 1; break;
+                    case 1:
+                        juego->selected_seed = 2; break;
+                    case 2:
+                        juego->selected_seed = 3; break;
+                    case 3:
+                        juego->selected_seed = 4; break;
+                    case 4:
+                        juego->selected_seed = 5; break;
+                }
+            }
+
+        }
     }
 }
