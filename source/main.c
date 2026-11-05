@@ -24,6 +24,8 @@ int main(){
     juego.seed_slot[0] = 1;
     juego.seed_slot[1] = 2;
     juego.seed_slot[2] = 3;
+    juego.seed_slot[3] = 4;
+    juego.seed_slot[4] = 5;
     // zombies inactivos
     for (int i = 0; i < MAX_ZOMBIES; i++) {
         juego.lista_zombies[i].activo = 0;
@@ -42,15 +44,19 @@ int main(){
     }
     // carga las texturas
     texture_load(&juego);
+    // carga la musica
+    music_load(&juego);
     // game loop
     while (!WindowShouldClose()) {
         procesar_entrada(&juego);
         update(&juego); 
+        music_update(&juego);
         draw(&juego);
     }
-    CloseWindow();
-
+    music_unload(&juego);
     texture_unload(&juego);
+    CloseWindow();
+    
 
     return 0;
 }

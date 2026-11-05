@@ -4,18 +4,25 @@
 #include <visual.h>
 
 void texture_load(estadojuego *juego){ // convierte las imagenes en texturas para el renderizado de las mismas
+    //zombies
     juego->bucket_texture = LoadTexture("assets/bucket.png");
     juego->cone_texture = LoadTexture("assets/cone.png");
-    juego->garlic_texture = LoadTexture("assets/garlic.png");
+    juego->zombie_texture = LoadTexture("assets/zombie.png");
+    juego->flag_zombie_texture = LoadTexture("assets/flag_zombie.png");
+    //varios
     juego->lawn_texture = LoadTexture("assets/lawn.png");
     juego->pea_texture = LoadTexture("assets/pea.png");
-    juego->peashooter_texture = LoadTexture("assets/peashooter.png");
     juego->sun_texture = LoadTexture("assets/sun.png");
+    //plantas
+    juego->peashooter_texture = LoadTexture("assets/peashooter.png");
     juego->sunflower_texture = LoadTexture("assets/sunflower.png");
     juego->wall_nut_1_texture = LoadTexture("assets/wall-nut_1.png");
     juego->wall_nut_2_texture = LoadTexture("assets/wall-nut_2.png");
     juego->wall_nut_3_texture = LoadTexture("assets/wall-nut_3.png");
-    juego->zombie_texture = LoadTexture("assets/zombie.png");
+    juego->garlic_texture = LoadTexture("assets/garlic.png");
+    juego->garlic_texture_2 = LoadTexture("assets/garlic_2.png");
+    juego->garlic_texture_3 = LoadTexture("assets/garlic_3.png");
+    juego->torchwood_texture = LoadTexture("assets/torchwood.png");
     //semillas
     juego->garlic_seed_texture = LoadTexture("assets/seeds/garlic.png");
     juego->peashooter_seed_texture = LoadTexture("assets/seeds/peashooter.png");
@@ -26,18 +33,25 @@ void texture_load(estadojuego *juego){ // convierte las imagenes en texturas par
 }
 
 void texture_unload(estadojuego *juego){ // cierra las texturas
+    //zombies
     UnloadTexture(juego->bucket_texture);
     UnloadTexture(juego->cone_texture);
-    UnloadTexture(juego->garlic_texture);
+    UnloadTexture(juego->zombie_texture);
+    UnloadTexture(juego->flag_zombie_texture);
+    //varios
     UnloadTexture(juego->lawn_texture);
     UnloadTexture(juego->pea_texture);
-    UnloadTexture(juego->peashooter_texture);
     UnloadTexture(juego->sun_texture);
+    //plantas
+    UnloadTexture(juego->peashooter_texture);
     UnloadTexture(juego->sunflower_texture);
     UnloadTexture(juego->wall_nut_1_texture);
     UnloadTexture(juego->wall_nut_2_texture);
     UnloadTexture(juego->wall_nut_3_texture);
-    UnloadTexture(juego->zombie_texture);
+    UnloadTexture(juego->garlic_texture);
+    UnloadTexture(juego->garlic_texture_2);
+    UnloadTexture(juego->garlic_texture_3);
+    UnloadTexture(juego->torchwood_texture);
     //semillas
     UnloadTexture(juego->garlic_seed_texture);
     UnloadTexture(juego->peashooter_seed_texture);
@@ -151,7 +165,7 @@ void draw(estadojuego *juego){
                         );
                         break;
                     case 3: // nuezDrawTexture(juego->bucket_texture, z_x-20, z_y-80, WHITE);
-                        if(p->vida >= 150){
+                        if(p->vida >= 720){ // 1440 / 2
                             DrawTextureEx(
                                 juego->wall_nut_1_texture, 
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
@@ -160,7 +174,7 @@ void draw(estadojuego *juego){
                                 WHITE
                             );
                         }
-                        else if(p->vida >= 100){
+                        else if(p->vida >= 480){ // 1440 / 3
                             DrawTextureEx(
                                 juego->wall_nut_2_texture, 
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
@@ -177,6 +191,43 @@ void draw(estadojuego *juego){
                                 rescale,
                                 WHITE
                             );
+                        break;
+                    case 4:
+                        if(p->vida >= 200){ // 400 / 2
+                            DrawTextureEx(
+                                juego->garlic_texture, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
+                                0.0f,
+                                rescale,
+                                WHITE
+                            );
+                        }
+                        else if(p->vida >= 150){ // 400 / 3 con bastante aproximación
+                            DrawTextureEx(
+                                juego->garlic_texture_2, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
+                                0.0f,
+                                rescale,
+                                WHITE
+                            );
+                        }
+                        else
+                            DrawTextureEx(
+                                juego->garlic_texture_3, 
+                                (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
+                                0.0f,
+                                rescale,
+                                WHITE
+                            );
+                        break;
+                    case 5:
+                        DrawTextureEx(
+                            juego->torchwood_texture, 
+                            (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
+                            0.0f,
+                            rescale,
+                            WHITE
+                        );
                         break;
                 }
             }
@@ -255,11 +306,11 @@ void draw(estadojuego *juego){
                             break;}
                     case 4: // bandera
                         DrawTextureEx(
-                            juego->zombie_texture, 
+                            juego->flag_zombie_texture, 
                             (Vector2){ (float)(z_x), (float)(z_y) }, 
                             0.0f,
                             rescale,
-                            GRAY
+                            WHITE
                         );
                         break;
                 }
@@ -295,12 +346,25 @@ void draw(estadojuego *juego){
                     break;
             }
         }
+        // dibujar cantidad de soles
+        DrawTextureEx(
+            juego->sun_texture, 
+            (Vector2){ 10.0f, 10.0f}, 
+            0.0f,
+            0.7f,
+            WHITE
+        );
+        DrawText(TextFormat("%d", juego->soles), 171, 42, 95, GRAY);
+        DrawText(TextFormat("%d", juego->soles), 170, 40, 90, WHITE);
+
         /* funciones utiles:
         void DrawText(const char *text, int posX, int posY, int fontSize, Color color); Draw text (using default font)
         const char *TextFormat(const char *text, ...); Text formatting with variables (sprintf() style)
         */
         
         // texto ---------------------------------------------------------------------------------------------------
+        // DEBUGGING
+        /*
         DrawFPS(10, 10);
         // soles
         DrawText(TextFormat("Sun: %d", juego->soles), 150, 10, 20, YELLOW);
@@ -354,7 +418,7 @@ void draw(estadojuego *juego){
 
                 DrawText("None", 10, 10+100, 20, GREEN);
         }
-        
+        */
         // resultado
         if(juego->partida == PARTIDA_LOSS){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});

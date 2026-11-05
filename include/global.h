@@ -16,15 +16,11 @@
 #define COLUMNAS 8
 #define MAX_PLANTAS ((FILAS) * (COLUMNAS))
 #define MAX_ZOMBIES 50
-#define MAX_SEEDS 3
+#define MAX_SEEDS 5
 #define MAX_PROYECTILES 100
 #define MAX_INTERACTUABLES 20
+#define MAX_CANCIONES 2
 #define CASA_HP_INICIAL 1
-#define SOLES_INICIALES 50
-//Zombies
-#define Z_DMG 20
-//Plantas
-#define SOLES_GIRASOL 25
 //Estado partida
 #define PARTIDA_JUGANDO 0
 #define PARTIDA_WIN 1
@@ -81,18 +77,26 @@ typedef struct{
     objeto lista_objetos[MAX_INTERACTUABLES];
 
     //Texturas
+    //  zombies
+    Texture2D zombie_texture;
     Texture2D bucket_texture;
     Texture2D cone_texture;
-    Texture2D garlic_texture;
+    Texture2D flag_zombie_texture;
+
+    //  varios
     Texture2D lawn_texture;
     Texture2D pea_texture;
-    Texture2D peashooter_texture;
     Texture2D sun_texture;
+    //  plantas
+    Texture2D peashooter_texture;
     Texture2D sunflower_texture;
     Texture2D wall_nut_1_texture;
     Texture2D wall_nut_2_texture;
     Texture2D wall_nut_3_texture;
-    Texture2D zombie_texture;
+    Texture2D garlic_texture;
+    Texture2D garlic_texture_2;
+    Texture2D garlic_texture_3;
+    Texture2D torchwood_texture;
     //  semillas
     Texture2D garlic_seed_texture;
     Texture2D peashooter_seed_texture;
@@ -115,6 +119,13 @@ typedef struct{
     int oleada_actual;
     int fase;
     int ticks_oleada_actual;
+
+    //Musica
+    Music backgroundMusic;
+    float volume;
+    bool pause;
+    int cancion_actual;
+    const char* playlist[MAX_CANCIONES];
 
 } estadojuego;
 #endif

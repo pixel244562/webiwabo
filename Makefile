@@ -1,19 +1,14 @@
-# Definiciones básicas
 CC = gcc
-CFLAGS = -Wall -Iinclude
-# Librerías necesarias para Raylib en Windows (MinGW)
-LIBS = $(shell pkg-config --libs --cflags raylib)
+CFLAGS = -Wall -Wextra -Iinclude -I/usr/local/include
+LIBS = -L/usr/local/lib64 -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
-# Archivos fuente y el nombre del ejecutable final
 SRC = source/main.c source/visual.c source/logic.c source/entrada.c
-TARGET = webiwabo.exe
+TARGET = webiwabo
 
-# Regla principal (se ejecuta al escribir solo 'make')
 all: $(TARGET)
 
 $(TARGET): $(SRC)
 	$(CC) $(SRC) $(CFLAGS) -o $(TARGET) $(LIBS)
 
-# Regla para limpiar los archivos ejecutables generados
 clean:
 	rm -f $(TARGET)

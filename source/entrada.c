@@ -20,6 +20,12 @@ void procesar_entrada(estadojuego* juego){
     if (IsKeyPressed(KEY_THREE)){
         juego->selected_seed = 3;
     }
+    if (IsKeyPressed(KEY_FOUR)){
+        juego->selected_seed = 4;
+    }
+    if (IsKeyPressed(KEY_FIVE)){
+        juego->selected_seed = 5;
+    }
 
     // left click actions
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -96,4 +102,72 @@ void procesar_entrada(estadojuego* juego){
 
         }
     }
+}
+
+// soundtrack
+
+void music_load(estadojuego* juego){
+    InitAudioDevice();
+
+    juego->volume = 0.8f;
+    juego->pause = false;
+    juego->cancion_actual = 0;
+    
+    juego->playlist[0] = "assets/soundtrack/ost1.mp3";
+    juego->playlist[1] = "assets/soundtrack/ost2.mp3";
+    
+    juego->backgroundMusic = LoadMusicStream(juego->playlist[juego->cancion_actual]);
+
+    juego->backgroundMusic.looping = false;
+
+    PlayMusicStream(juego->backgroundMusic);
+    SetMusicVolume(juego->backgroundMusic, juego->volume);
+    SetMusicPan(juego->backgroundMusic, 0.0f);
+    UpdateMusicStream(juego->backgroundMusic);
+}
+void music_update(estadojuego* juego) {
+    //update de la musica
+    UpdateMusicStream(juego->backgroundMusic);
+
+    //seleccion de teclas
+    if (IsKeyPressed(KEY_M)){
+        juego->pause = !juego->pause;
+        if (juego->pause) PauseMusicStream(juego->backgroundMusic);
+        else ResumeMusicStream(juego->backgroundMusic);
+    }
+    if (IsKeyDown(KEY_DOWN)){
+        juego->volume -= 0.05f;
+        if (juego->volume < 0.0f) juego->volume = 0.0f;
+        SetMusicVolume(juego->backgroundMusic, juego->volume);
+    }
+    else if (IsKeyDown(KEY_UP)){
+        juego->volume += 0.05f;
+        if (juego->volume > 1.0f) juego->volume = 1.0f;
+        SetMusicVolume(juego->backgroundMusic, juego->volume);
+    }
+    //declaracion del tiempo de la musica ya reproducida y la total
+    float tiempo_reproducido = GetMusicTimePlayed(juego->backgroundMusic);
+    float duracion_total = GetMusicTimeLength(juego->backgroundMusic);
+
+    //playlist de canciones
+    //(como el calculo no es exacto, le resto 0.1f para que no se quede pegado en la primera cancion)
+    if (tiempo_reproducido >= (duracion_total-2.0f)){
+        UnloadMusicStream(juego->backgroundMusic);
+
+        juego->cancion_actual++;
+        if (juego->cancion_actual >= MAX_CANCIONES) {
+            juego->cancion_actual = 0; 
+        }
+
+        juego->backgroundMusic = LoadMusicStream(juego->playlist[juego->cancion_actual]);
+        juego->backgroundMusic.looping = false;
+        PlayMusicStream(juego->backgroundMusic);
+        SetMusicVolume(juego->backgroundMusic, juego->volume);
+    }
+}
+
+void music_unload(estadojuego* juego){
+    //unload de la musica y fin del dispositivo de audio
+    UnloadMusicStream(juego->backgroundMusic);
+    CloseAudioDevice();
 }
