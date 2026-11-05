@@ -12,6 +12,7 @@ void texture_load(estadojuego *juego){ // convierte las imagenes en texturas par
     //varios
     juego->lawn_texture = LoadTexture("assets/lawn.png");
     juego->pea_texture = LoadTexture("assets/pea.png");
+    juego->fire_pea_texture = LoadTexture("assets/fire_pea.png");
     juego->sun_texture = LoadTexture("assets/sun.png");
     //plantas
     juego->peashooter_texture = LoadTexture("assets/peashooter.png");
@@ -41,6 +42,7 @@ void texture_unload(estadojuego *juego){ // cierra las texturas
     //varios
     UnloadTexture(juego->lawn_texture);
     UnloadTexture(juego->pea_texture);
+    UnloadTexture(juego->fire_pea_texture);
     UnloadTexture(juego->sun_texture);
     //plantas
     UnloadTexture(juego->peashooter_texture);
@@ -322,7 +324,20 @@ void draw(estadojuego *juego){
             if(p->activo == 1){
                 int p_x = (int)p->pos_x;
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y -120;
-                DrawTexture(juego->pea_texture,p_x, p_y, WHITE);
+                if(p->tipo == 1){
+                    DrawTexture(juego->pea_texture,p_x, p_y, WHITE);
+                }
+                else{
+                    DrawTextureEx(
+                            juego->fire_pea_texture, 
+                            (Vector2){ (float)(p_x), (float)(p_y) }, 
+                            0.0f,
+                            0.6,
+                            WHITE
+                        );
+                }
+                
+                
             }
         }
         for(int i = 0; i<MAX_INTERACTUABLES; i++){

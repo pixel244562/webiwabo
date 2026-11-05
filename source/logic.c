@@ -69,6 +69,18 @@
                 if (plant != NULL) { // Si hay planta al frente, la empieza a comer
                     if(juego->ticks % z->velocidad == 0){
                         plant->vida -= 20;
+                        if (plant->tipo== 4){
+                            if(z->fila == 0){
+                                z->fila = 1;
+                            }
+                            else if(z->fila == 4){
+                                z->fila = 3;
+                            }
+                            else{
+                                z->fila += GetRandomValue(0, 1) * 2 - 1; // -1 o 1
+                            }
+                            z->pos_x-= 100; // el zombie se mueve más adelante para evitar maldad y abuso
+                        }
 
                         if (plant->vida <= 0) { // Termina de comérsela
                             plant->activo = 0;
@@ -130,6 +142,7 @@
                             for(int j = 0; j < MAX_PROYECTILES; j++) {
                                 proyectil *proyectil_actual = &juego->lista_proyectiles[j];
                                 if (proyectil_actual->activo == 0) {
+                                    proyectil_actual->tipo = 1;
                                     proyectil_actual->activo = 1;
                                     proyectil_actual->fila = p_actual->fila;
                                     proyectil_actual->pos_x = (float)((p_actual->columna * (tile_width + tile_offset)) + move_x);
@@ -251,7 +264,18 @@
             */
             proyectil_actual->pos_x += 14.0f;
             proyectil_actual->columna = (int)((proyectil_actual->pos_x - move_x + 100) / (tile_width + tile_offset));
-
+            for(int id = 0; id < MAX_PLANTAS; id++){
+                planta *p = &juego->lista_plantas[id];
+                if(p->activo &&
+                    p->tipo == 5 &&
+                    p->fila == proyectil_actual->fila &&
+                    p->columna == proyectil_actual->columna){
+                    
+                    proyectil_actual->tipo = 2;
+                    proyectil_actual->dmg = 40;
+                    break;
+                }
+            }
             //IMPACTO
             for (int j= 0; j < MAX_ZOMBIES; j ++){
                 zombie* zombie_actual = &juego -> lista_zombies[j];

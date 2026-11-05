@@ -4,6 +4,7 @@
 #include "logic.h"
 #include "entrada.h"
 #include <raylib.h>
+#include <time.h>
 
 int main(){
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "webi wabo");
@@ -46,6 +47,8 @@ int main(){
     texture_load(&juego);
     // carga la musica
     music_load(&juego);
+    // semilla aleatoria
+    SetRandomSeed(time(NULL));
     // game loop
     while (!WindowShouldClose()) {
         procesar_entrada(&juego);

@@ -45,7 +45,7 @@ typedef struct {
 } zombie;
 
 typedef struct{
-    int tipo; //3 Lanzaguisantes, 4 girasol, 5 nuez
+    int tipo; //1 Lanzaguisantes, 2 girasol, 3 nuez, 4 ajo, 5 plantorcha
     int vida;
     char fila;
     char columna;
@@ -55,6 +55,7 @@ typedef struct{
 
 typedef struct{
     int activo;
+    int tipo; // 1 guizante, 2 guizante de fuego
     int dmg;
     char fila; // fila de pasto
     char columna; // columna de pasto
@@ -86,6 +87,7 @@ typedef struct{
     //  varios
     Texture2D lawn_texture;
     Texture2D pea_texture;
+    Texture2D fire_pea_texture;
     Texture2D sun_texture;
     //  plantas
     Texture2D peashooter_texture;
