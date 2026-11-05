@@ -10,7 +10,7 @@ int main(){
     ToggleFullscreen();
     SetTargetFPS(30);
 
-    estadojuego juego;
+    estadojuego juego = {0}; //Ahora inicializa en 0 -Adrián
     juego.soles = 50;
     juego.vida_casa = CASA_HP_INICIAL;
     juego.ticks = 0;

@@ -37,6 +37,10 @@
 #define FASE_OLEADA 1
 #define FASE_DESCANSO 2
 #define FASE_FIN 3
+//CDs de semillas (30 ticks = 1 sec)
+#define SHORT_SEED_CD 300
+#define MEDIUM_SEED_CD 450
+#define LONG_SEED_CD 600
 
 typedef struct {
     int tipo; //1: común, 2: cono, 3: cubo, 4: bandera
@@ -110,6 +114,7 @@ typedef struct{
     int ultimo_clic_columna;
     int selected_seed;
     int seed_slot[MAX_SEEDS];
+    int seed_cd[MAX_SEEDS];
 
     //Oleadas
     int oleada_actual;

@@ -49,9 +49,13 @@ void procesar_entrada(estadojuego* juego){
                     }
                 }
                 if(can_plant == 1){
-                    if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
-                        place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
-                        juego->selected_seed = 0;
+                    int slot = juego ->selected_seed - 1;
+                    if (juego -> seed_cd[slot] == 0){//Ahora revisa que haya pasado el cd de la semilla antes de cobrar -Adrian
+                        if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
+                            place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
+                            juego->seed_cd[slot] = get_seed_cd(juego-> seed_slot[slot]);
+                            juego->selected_seed = 0; 
+                        }
                     }
                 }
             }

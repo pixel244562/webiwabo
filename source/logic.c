@@ -200,6 +200,24 @@ void zombie_spawn(int x, int y, int type, estadojuego *juego){
     sortZombieByRank(juego);
 }
 
+static void seed_cd_update(estadojuego*juego){
+    for (int i = 0; i < MAX_SEEDS; i ++){
+        if (juego->seed_cd[i] > 0){
+            juego->seed_cd[i] --;
+        }
+    }
+}
+
+int get_seed_cd(int tipo){
+    //Retorna los ticks de CD de cada planta
+    switch(tipo){
+        case 1: return SHORT_SEED_CD; //Lanzaguisantes
+        case 2: return SHORT_SEED_CD; //Girasol 
+        case 3: return LONG_SEED_CD; //Nuez
+        default: return MEDIUM_SEED_CD;
+    }
+}
+
 void place_plant(int x, int y, int type, estadojuego *juego){
     int id;
     // encuentra el primero espacio inactivo
@@ -386,6 +404,7 @@ void update(estadojuego* juego){
     comportamiento_plantas(juego);
     waves(4,juego);
     naturally_spawn_sun(juego);
+    seed_cd_update(juego);
     resultado(juego);
     juego -> ticks++;
 }
