@@ -37,6 +37,8 @@
 #define FASE_OLEADA 1
 #define FASE_DESCANSO 2
 #define FASE_FIN 3
+//Musica
+#define MAX_CANCIONES 2
 
 typedef struct {
     int tipo; //1: común, 2: cono, 3: cubo, 4: bandera
@@ -115,6 +117,13 @@ typedef struct{
     int oleada_actual;
     int fase;
     int ticks_oleada_actual;
+
+    //Musica
+    Music backgroundMusic;
+    float volume;
+    bool pause;
+    int cancion_actual;
+    const char* playlist [MAX_CANCIONES];
 
 } estadojuego;
 #endif
