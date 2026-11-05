@@ -58,21 +58,24 @@ void procesar_entrada(estadojuego* juego){
 
             // si hay semilla seleccionada intenta plantarla
             if(juego->selected_seed != 0 && juego->selected_seed != 6){
-                char can_plant = 1;
-                // reviso que no existan plantas activas en la misma posición que se quiera plantar
-                for(int i = 0; i<MAX_PLANTAS; i++){
-                    planta *p = &juego->lista_plantas[i];
-                    if(p->activo == 1){
-                        if(p->columna == columna && p->fila == fila){
-                            can_plant = 0;
-                            juego->selected_seed = 0;
+                // si el cd de dicha planta es 0, intenta plantarla
+                if(juego->seed_cd[juego->selected_seed-1] == 0){
+                    char can_plant = 1;
+                    // reviso que no existan plantas activas en la misma posición que se quiera plantar
+                    for(int i = 0; i<MAX_PLANTAS; i++){
+                        planta *p = &juego->lista_plantas[i];
+                        if(p->activo == 1){
+                            if(p->columna == columna && p->fila == fila){
+                                can_plant = 0;
+                                juego->selected_seed = 0;
+                            }
                         }
                     }
-                }
-                if(can_plant == 1){
-                    if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
-                        place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
-                        juego->selected_seed = 0;
+                    if(can_plant == 1){
+                        if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
+                            place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
+                            juego->selected_seed = 0;
+                        }
                     }
                 }
             }

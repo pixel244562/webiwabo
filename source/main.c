@@ -19,6 +19,10 @@ int main(){
     // oleadas
     juego.ticks_oleada_actual = 0;
     juego.oleada_actual = 0;
+    juego.oleada_previa = 0;
+    juego.zombies_coming = 0;
+    juego.c_intervalo = 0;
+    juego.zombie_kills = 0;
     // semillas
     juego.selected_seed = 0;
     // semillas seleccionadas por defecto
@@ -42,6 +46,10 @@ int main(){
     // objetos tipo 0
     for (int i = 0; i < MAX_INTERACTUABLES; i++) {
         juego.lista_objetos[i].tipo = 0;
+    }
+    // cooldown de semillas
+    for (int i = 0; i < MAX_SEEDS; i++) {
+        juego.seed_cd[i] = 0;
     }
     // carga las texturas
     texture_load(&juego);

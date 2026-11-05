@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <global.h>
 #include <visual.h>
+#include "logic.h"
 
 void texture_load(estadojuego *juego){ // convierte las imagenes en texturas para el renderizado de las mismas
     //zombies
@@ -137,7 +138,17 @@ void draw(estadojuego *juego){
         );
         DrawText("125", 301, 242+(h+h2)*4+3, 75, GRAY);
         DrawText("125", 300, 240+(h+h2)*4+3, 70, WHITE);
-
+        // dibuja el cooldown de plantas
+        
+        for (int i = 0; i < MAX_SEEDS; i ++){
+            if (juego->seed_cd[i] > 0){
+                int altura = 162 * juego->seed_cd[i] / get_seed_cd(i+1);
+                DrawRectangle(150,150+175*i,230,162*(juego->seed_cd[i]/get_seed_cd(i+1)), (Color){ 0, 0, 0, 100 });
+                DrawRectangle(150, 150 + 175*i + 162 - altura,
+                    230, altura, (Color){0, 0, 0, 100}
+                );
+            }
+        }
         // rectangulo para visualizar forma de colisión rectangular de semillas
         //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
         //DrawRectangle(150,150+175,230,162, (Color){ 182, 255, 92, 100 });
@@ -255,7 +266,7 @@ void draw(estadojuego *juego){
                         );
                         break;
                     case 2: // zombie cono
-                        if(z->vida > 100){
+                        if(z->vida > 200){
                             DrawTextureEx(
                                 juego->zombie_texture, 
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
@@ -283,7 +294,7 @@ void draw(estadojuego *juego){
                             break;
                         }
                     case 3: // zombie cubeta
-                        if(z->vida > 100){
+                        if(z->vida > 200){
                             DrawTextureEx(
                                 juego->zombie_texture, 
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
@@ -454,11 +465,26 @@ void draw(estadojuego *juego){
 
                 DrawText("None", 10, 10+100, 20, GREEN);
         }
+        
+        if(juego->oleada_actual != juego->oleada_previa){
+            juego->oleada_previa = juego->oleada_actual;
+            juego->zombies_coming = 1;
+        }
+        if(juego->zombies_coming == 1){
+            DrawText("THE ZOMBIES ARE COMING!", 20, 10+80, 60, WHITE);
+        }
+        if(juego->ticks % 300 == 0){
+            juego->zombies_coming = 0;
+        }
         */
         // resultado
         if(juego->partida == PARTIDA_LOSS){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
-            DrawText(TextFormat("THE ZOMBIES ATE YOUR BRAINS!", juego->ticks), 20, 10+80, 60, WHITE);
+            DrawText("THE ZOMBIES ATE YOUR BRAINS!", 20, 10+80, 60, WHITE);
+        }
+        if(juego->partida == PARTIDA_WIN){
+            DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
+            DrawText("YOU WIN!", 20, 10+80, 60, WHITE);
         }
         
 
