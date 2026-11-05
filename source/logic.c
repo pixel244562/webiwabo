@@ -163,7 +163,7 @@
                 else if (p_actual->tipo == 2) {
                     if (p_actual->cd == 0) {//Cooldown
                         spawn_sun(p_actual->columna, p_actual->fila, 0, juego);
-                        p_actual->cd = 90;
+                        p_actual->cd = 700;
                     }
                     p_actual->cd--;
                 }
