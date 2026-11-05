@@ -37,15 +37,12 @@
 #define FASE_OLEADA 1
 #define FASE_DESCANSO 2
 #define FASE_FIN 3
-<<<<<<< HEAD
 //CDs de semillas (30 ticks = 1 sec)
 #define SHORT_SEED_CD 300
 #define MEDIUM_SEED_CD 450
 #define LONG_SEED_CD 600
-=======
 //Musica
 #define MAX_CANCIONES 2
->>>>>>> 71c6d94ebcd58705e111b5de71108ec75a68b660
 
 typedef struct {
     int tipo; //1: común, 2: cono, 3: cubo, 4: bandera
