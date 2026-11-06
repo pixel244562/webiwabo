@@ -51,7 +51,7 @@ void accion_zombies(estadojuego *juego){
 
         if(z->activo == 0) continue; //No hay zombie, pasa el siguiente
         
-        if(z->columna == 0){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
+        if(z->columna == -1){ //Llego a la casa, por lo tanto se desactiva y resta vida a la casa
             z->activo = 0;
             juego->vida_casa--;
         } 

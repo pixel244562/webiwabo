@@ -149,6 +149,15 @@ void draw(estadojuego *juego){
                 );
             }
         }
+        
+        if(juego->selected_seed != 0 && juego->selected_seed != 6){
+            int i = juego->selected_seed-1;
+            int altura = 162;
+            DrawRectangle(150,150+175*i,230,162, (Color){ 255, 255, 255, 100 });
+            DrawRectangle(150, 150 + 175*i + 162 - altura,
+                230, altura, (Color){255, 255, 255, 30}
+            );
+        }
         // rectangulo para visualizar forma de colisión rectangular de semillas
         //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
         //DrawRectangle(150,150+175,230,162, (Color){ 182, 255, 92, 100 });

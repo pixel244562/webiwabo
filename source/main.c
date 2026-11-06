@@ -57,6 +57,7 @@ int main(){
     music_load(&juego);
     // semilla aleatoria
     SetRandomSeed(time(NULL));
+
     // game loop
     while (!WindowShouldClose()) {
         procesar_entrada(&juego);
