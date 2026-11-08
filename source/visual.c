@@ -89,7 +89,7 @@ void draw(estadojuego *juego){
             }
         }
         */
-        // dibujar las semillas con su coste
+        // dibujar las semillas
         const int h = 150, h2 = 25;
         // h+h2 = 175
         DrawTextureEx(
@@ -99,8 +99,6 @@ void draw(estadojuego *juego){
             0.7f, 
             WHITE
         );
-        DrawText("100", 301, 242, 75, GRAY);
-        DrawText("100", 300, 240, 70, WHITE);
 
         DrawTextureEx(
             juego->sunflower_seed_texture, 
@@ -109,8 +107,7 @@ void draw(estadojuego *juego){
             0.7f, 
             WHITE
         );
-        DrawText("50", 301+20, 242+h+h2+3, 75, GRAY);
-        DrawText("50", 300+20, 240+h+h2+3, 70, WHITE);
+        
         DrawTextureEx(
             juego->wall_nut_seed_texture, 
             (Vector2){ 150.0f, (float)(h*3 + (h2*2)) }, 
@@ -118,8 +115,7 @@ void draw(estadojuego *juego){
             0.7f, 
             WHITE
         );
-        DrawText("50", 301+20, 242+(h+h2)*2+3, 75, GRAY);
-        DrawText("50", 300+20, 240+(h+h2)*2+3, 70, WHITE);
+        
         DrawTextureEx(
             juego->garlic_seed_texture, 
             (Vector2){ 150.0f, (float)(h*4 + (h2*3)) }, 
@@ -127,8 +123,7 @@ void draw(estadojuego *juego){
             0.7f, 
             WHITE
         );
-        DrawText("50", 301+20, 242+(h+h2)*3+3, 75, GRAY);
-        DrawText("50", 300+20, 240+(h+h2)*3+3, 70, WHITE);
+        
         DrawTextureEx(
             juego->torchwood_seed_texture, 
             (Vector2){ 150.0f, (float)(h*5 + (h2*4)) }, 
@@ -136,28 +131,61 @@ void draw(estadojuego *juego){
             0.7f, 
             WHITE
         );
-        DrawText("125", 301, 242+(h+h2)*4+3, 75, GRAY);
-        DrawText("125", 300, 240+(h+h2)*4+3, 70, WHITE);
+        
         // dibuja el cooldown de plantas
         
         for (int i = 0; i < MAX_SEEDS; i ++){
             if (juego->seed_cd[i] > 0){
                 int altura = 162 * juego->seed_cd[i] / get_seed_cd(i+1);
                 DrawRectangle(150,150+175*i,230,162*(juego->seed_cd[i]/get_seed_cd(i+1)), (Color){ 0, 0, 0, 100 });
-                DrawRectangle(150, 150 + 175*i + 162 - altura,
+                DrawRectangle(150, 150+175*i+162 - altura,
                     230, altura, (Color){0, 0, 0, 100}
                 );
             }
         }
         
+        // dibuja blanco translucido sobre la semilla seleccionada
         if(juego->selected_seed != 0 && juego->selected_seed != 6){
             int i = juego->selected_seed-1;
             int altura = 162;
-            DrawRectangle(150,150+175*i,230,162, (Color){ 255, 255, 255, 100 });
-            DrawRectangle(150, 150 + 175*i + 162 - altura,
-                230, altura, (Color){255, 255, 255, 30}
+            DrawRectangle(150, 150+175*i+162 - altura,
+                230, altura, (Color){255, 255, 255, 120}
             );
         }
+        
+        for(int i = 1; i <= MAX_SEEDS; i++){
+            int coste;
+            switch(i){
+                case 1: // peashooter
+                    coste = 100; break;
+                case 2: // sunflower
+                    coste = 50; break;
+                case 3: // wall-nut
+                    coste = 50; break;
+                case 4: // garlic
+                    coste = 50; break;
+                case 5: // torchwood
+                    coste = 125; break;
+                default:
+                    coste = 0;
+            }
+            if(juego->soles < coste){
+                int altura = 162;
+                DrawRectangle(150, 150+175*(i-1), 230, altura, (Color){0, 0, 0, 60});
+            }
+        }
+        // dibuja los costes de cada semilla
+        DrawText("100", 301, 242, 75, GRAY);
+        DrawText("100", 300, 240, 70, WHITE);
+        DrawText("50", 301+20, 242+h+h2+3, 75, GRAY);
+        DrawText("50", 300+20, 240+h+h2+3, 70, WHITE);
+        DrawText("50", 301+20, 242+(h+h2)*2+3, 75, GRAY);
+        DrawText("50", 300+20, 240+(h+h2)*2+3, 70, WHITE);
+        DrawText("50", 301+20, 242+(h+h2)*3+3, 75, GRAY);
+        DrawText("50", 300+20, 240+(h+h2)*3+3, 70, WHITE);
+        DrawText("125", 301, 242+(h+h2)*4+3, 75, GRAY);
+        DrawText("125", 300, 240+(h+h2)*4+3, 70, WHITE);
+
         // rectangulo para visualizar forma de colisión rectangular de semillas
         //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
         //DrawRectangle(150,150+175,230,162, (Color){ 182, 255, 92, 100 });
