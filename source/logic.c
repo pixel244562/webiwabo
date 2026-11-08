@@ -1,12 +1,71 @@
 #include <stdio.h>
 #include <global.h>
 
+void sfx_load(estadojuego* juego){
+    // carga los efectos de sonido
+    juego->sfx_siren = LoadSound("assets/sfx/SFX_siren.ogg");
+    juego->sfx_buzzer = LoadSound("assets/sfx/SFX_buzzer.ogg");
+    juego->sfx_chomp = LoadSound("assets/sfx/SFX_chomp.ogg");
+    juego->sfx_chomp2 = LoadSound("assets/sfx/SFX_chomp2.ogg");
+    juego->sfx_chompsoft = LoadSound("assets/sfx/SFX_chompsoft.ogg");
+    juego->sfx_sun = LoadSound("assets/sfx/SFX_points.ogg");
+    juego->sfx_plant = LoadSound("assets/sfx/SFX_plant.ogg");
+    juego->sfx_losemusic = LoadSound("assets/sfx/SFX_losemusic.ogg");
+    juego->sfx_scream = LoadSound("assets/sfx/SFX_Voices_scream.ogg");
+    juego->sfx_splat = LoadSound("assets/sfx/SFX_splat.ogg");
+    juego->sfx_splat2 = LoadSound("assets/sfx/SFX_splat2.ogg");
+    juego->sfx_splat3 = LoadSound("assets/sfx/SFX_splat3.ogg");
+    juego->sfx_throw = LoadSound("assets/sfx/SFX_throw.ogg");
+    juego->sfx_throw2 = LoadSound("assets/sfx/SFX_throw2.ogg");
+    juego->sfx_yuck = LoadSound("assets/sfx/SFX_Voices_yuck.ogg");
+    juego->sfx_yuck2 = LoadSound("assets/sfx/SFX_Voices_yuck2.ogg");
+    juego->sfx_firstwave = LoadSound("assets/sfx/SFX_Voices_awooga.ogg");
+    juego->sfx_winmusic = LoadSound("assets/sfx/SFX_winmusic.ogg");
+    juego->sfx_shovel = LoadSound("assets/sfx/SFX_shovel.ogg");
+
+
+}
+
+void sfx_unload(estadojuego* juego){
+    // cierra los efectos de sonido
+    UnloadSound(juego->sfx_siren);
+    UnloadSound(juego->sfx_buzzer);
+    UnloadSound(juego->sfx_chomp);
+    UnloadSound(juego->sfx_chomp2);
+    UnloadSound(juego->sfx_chompsoft);
+    UnloadSound(juego->sfx_sun);
+    UnloadSound(juego->sfx_plant);
+    UnloadSound(juego->sfx_losemusic);
+    UnloadSound(juego->sfx_scream);
+    UnloadSound(juego->sfx_splat);
+    UnloadSound(juego->sfx_splat2);
+    UnloadSound(juego->sfx_splat3);
+    UnloadSound(juego->sfx_throw);
+    UnloadSound(juego->sfx_throw2);
+    UnloadSound(juego->sfx_yuck);
+    UnloadSound(juego->sfx_yuck2);
+    UnloadSound(juego->sfx_firstwave);
+    UnloadSound(juego->sfx_winmusic);
+    UnloadSound(juego->sfx_shovel);
+}
+
 void resultado(estadojuego* juego){
+    // derrota
     if (juego -> vida_casa <= 0){
         juego -> partida = PARTIDA_LOSS;
         }
+    if (juego->losemusic_played == 0 && juego->partida == PARTIDA_LOSS){
+        PlaySound(juego->sfx_losemusic);
+        PlaySound(juego->sfx_scream);
+        juego->losemusic_played = 1;
+    }
+    // victoria
     if (juego -> zombie_kills == 33){
         juego -> partida = PARTIDA_WIN;
+    }
+    if (juego->winmusic_played == 0 && juego->partida == PARTIDA_WIN){
+        PlaySound(juego->sfx_winmusic);
+        juego->winmusic_played = 1;
     }
 }
 
@@ -37,12 +96,20 @@ void impacto(zombie * z, proyectil * p, estadojuego *juego){
     a la vida del zombie el daño infligido por el proyectil
     */
     z -> vida -= p -> dmg;
-
     if (z -> vida <= 0){
         z -> activo = 0; //Zombie x_x - Adrián
         juego->zombie_kills++;
     }
     p -> activo = 0; //El proyectil se va por cigarrillos
+    int splat = GetRandomValue(1,3);
+    switch(splat){
+        case 1:
+            PlaySound(juego->sfx_splat); break;
+        case 2:
+            PlaySound(juego->sfx_splat2); break;
+        case 3:
+            PlaySound(juego->sfx_splat3);
+    }
 }
 
 void accion_zombies(estadojuego *juego){
@@ -73,7 +140,22 @@ void accion_zombies(estadojuego *juego){
             if (plant != NULL) { // Si hay planta al frente, la empieza a comer
                 if(juego->ticks % z->velocidad == 0){
                     plant->vida -= 20;
+                    // reproduce cualquiera de las 3 mordidas
+                    int chomp = GetRandomValue(1,3);
+                    switch(chomp){
+                        case 1:
+                            PlaySound(juego->sfx_chomp); break;
+                        case 2:
+                            PlaySound(juego->sfx_chomp2); break;
+                        case 3:
+                            PlaySound(juego->sfx_chompsoft);
+                    }
                     if (plant->tipo== 4){
+                        int yuck = GetRandomValue(1,2);
+                        if(yuck == 1)
+                            PlaySound(juego->sfx_yuck);
+                        else
+                            PlaySound(juego->sfx_yuck2);
                         if(z->fila == 0){
                             z->fila = 1;
                         }
@@ -83,7 +165,7 @@ void accion_zombies(estadojuego *juego){
                         else{
                             z->fila += GetRandomValue(0, 1) * 2 - 1; // -1 o 1
                         }
-                        z->pos_x-= 100; // el zombie se mueve más adelante para evitar maldad y abuso
+                        z->pos_x-= 80; // el zombie se mueve más adelante para evitar maldad y abuso
                     }
 
                     if (plant->vida <= 0) { // Termina de comérsela
@@ -157,7 +239,11 @@ void comportamiento_plantas(estadojuego* juego) {
                                 proyectil_actual->pos_x = (float)((p_actual->columna * (tile_width + tile_offset)) + move_x);
                                 proyectil_actual->columna = p_actual->columna; // Inicializamos su columna lógica
                                 proyectil_actual->dmg = 20;
-                            
+                                int throw = GetRandomValue(1,2);
+                                if(throw == 1)
+                                    PlaySound(juego->sfx_throw);
+                                else
+                                    PlaySound(juego->sfx_throw2);
                                 break; //Disparo unico, puedo adaptar la logica del lanza guisantes para por ejemplo una repetidora
                                 //O uno de esos que disparan en 3 filas a la vez (Esta sería mas facil) - Adrián
                             }
@@ -370,15 +456,29 @@ static int elegir_tipo_zombie(int num_oleada){
 void waves(int oleadas, estadojuego* juego){
     if (juego->oleada_actual >= oleadas)
         return;
+    int duracion = 3000;
     int cantidad[4] = {5, 7, 9, 12}; // zombies por oleada (33)
-    int duracion = 2400;
+    /*
+    if(juego->oleada_actual==0){
+        duracion = 800;
+    }
+    */
     int n = cantidad[juego->oleada_actual];
     int intervalo = duracion / n; // distribuye los zombies
 
     juego->ticks_oleada_actual++;
     if(juego->ticks_oleada_actual % intervalo == 0){
-
-        int x = GetRandomValue(9, 20);
+        if(juego->siren_played == 0){
+            PlaySound(juego->sfx_siren);
+            if(juego->oleada_actual==0)
+                PlaySound(juego->sfx_firstwave);
+            juego->siren_played = 1;
+        }
+        int x;
+        if(juego->oleada_actual == 0)
+            x = GetRandomValue(8, 10);
+        else
+            x = GetRandomValue(8, 18);
         int y = GetRandomValue(0, 4);
 
         int tipo;
@@ -414,10 +514,11 @@ void waves(int oleadas, estadojuego* juego){
     }
     // si llega a la duración, la oleada termina
     if(juego->ticks_oleada_actual >= duracion){
-    juego->ticks_oleada_actual = 0;
-    juego->c_intervalo = 0;
-    juego->oleada_actual++;
-}
+        juego->siren_played = 0;
+        juego->ticks_oleada_actual = 0;
+        juego->c_intervalo = 0;
+        juego->oleada_actual++;
+    }
 }
 
 int sun_cost( int plant_id, estadojuego* juego){

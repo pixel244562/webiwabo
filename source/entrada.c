@@ -80,9 +80,14 @@ void procesar_entrada(estadojuego* juego){
                         if(sun_cost(juego->seed_slot[juego->selected_seed-1],juego) >= 0){
                             place_plant(columna, fila, juego->seed_slot[juego->selected_seed-1],juego);
                             juego->selected_seed = 0;
+                            PlaySound(juego->sfx_plant);
                         }
+                        else
+                            PlaySound(juego->sfx_buzzer);
                     }
                 }
+                else
+                    PlaySound(juego->sfx_buzzer);
             }
             // la pala desactiva la planta
             if(juego->selected_seed == 6){
@@ -93,6 +98,7 @@ void procesar_entrada(estadojuego* juego){
                             p->activo = 0;
                             juego->selected_seed = 0;
                             ShowCursor();
+                            PlaySound(juego->sfx_shovel);
                         }
                     }
                 }
@@ -118,6 +124,7 @@ void procesar_entrada(estadojuego* juego){
             if(obj->tipo == 1/*type sun*/ && CheckCollisionPointCircle(juego->mouse_pos,(Vector2){ centro_x, centro_y },90.0)){
                 obj->tipo = 0;
                 juego->soles+=25;
+                PlaySound(juego->sfx_sun);
             } 
         }
         // select seed
@@ -145,7 +152,6 @@ void procesar_entrada(estadojuego* juego){
 }
 
 // soundtrack
-
 void music_load(estadojuego* juego){
     InitAudioDevice();
 
@@ -165,6 +171,7 @@ void music_load(estadojuego* juego){
     SetMusicPan(juego->backgroundMusic, 0.0f);
     UpdateMusicStream(juego->backgroundMusic);
 }
+
 void music_update(estadojuego* juego) {
     //update de la musica
     UpdateMusicStream(juego->backgroundMusic);

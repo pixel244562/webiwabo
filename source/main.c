@@ -55,6 +55,11 @@ int main(){
     texture_load(&juego);
     // carga la musica
     music_load(&juego);
+    // carga los efectos de sonido
+    sfx_load(&juego);
+    juego.siren_played = 0;
+    juego.losemusic_played = 0;
+    juego.winmusic_played = 0;
     // semilla aleatoria
     SetRandomSeed(time(NULL));
 
@@ -66,6 +71,7 @@ int main(){
         draw(&juego);
     }
     music_unload(&juego);
+    sfx_unload(&juego);
     texture_unload(&juego);
     CloseWindow();
     

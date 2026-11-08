@@ -133,13 +133,36 @@ typedef struct{
     int c_intervalo;
     int zombie_kills;
 
-
     //Musica
     Music backgroundMusic;
     float volume;
     bool pause;
     int cancion_actual;
     const char* playlist[MAX_CANCIONES];
+
+    //Sfx
+    int siren_played;
+    int losemusic_played;
+    int winmusic_played;
+    Sound sfx_siren;
+    Sound sfx_buzzer;
+    Sound sfx_chomp;
+    Sound sfx_chomp2;
+    Sound sfx_chompsoft;
+    Sound sfx_sun;
+    Sound sfx_plant;
+    Sound sfx_losemusic;
+    Sound sfx_scream;
+    Sound sfx_splat;
+    Sound sfx_splat2;
+    Sound sfx_splat3;
+    Sound sfx_throw;
+    Sound sfx_throw2;
+    Sound sfx_yuck;
+    Sound sfx_yuck2;
+    Sound sfx_firstwave;
+    Sound sfx_winmusic;
+    Sound sfx_shovel;
 
 } estadojuego;
 #endif

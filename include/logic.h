@@ -17,4 +17,7 @@ void waves(int oleadas, estadojuego *juego);
 void spawn_sun(int x, int y, int move, estadojuego* juego);
 void naturally_spawn_sun(estadojuego *juego);
 int get_seed_cd(int tipo);
+// sfx
+void sfx_load(estadojuego* juego);
+void sfx_unload(estadojuego* juego);
 #endif
