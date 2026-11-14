@@ -95,6 +95,7 @@ void procesar_entrada(estadojuego* juego){
                     planta *p = &juego->lista_plantas[i];
                     if(p->activo == 1){
                         if(p->columna == columna && p->fila == fila){
+                            p->vida = 0;
                             p->activo = 0;
                             juego->selected_seed = 0;
                             ShowCursor();

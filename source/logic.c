@@ -213,7 +213,7 @@ void comportamiento_plantas(estadojuego* juego) {
     for (int i = 0; i < MAX_PLANTAS; i++) {
         planta* p_actual = &juego->lista_plantas[i];
 
-        if (p_actual->vida > 0) {//La planta debe estar viva
+        if (p_actual->activo ==  1) {//La planta debe estar viva
             
             // LANZAGUISANTES
             if (p_actual->tipo == 1) {
