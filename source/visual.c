@@ -18,7 +18,6 @@ void texture_load(estadojuego *juego){ // convierte las imagenes en texturas par
     juego->shovel_texture = LoadTexture("assets/shovel.png");
     //plantas
     juego->peashooter_texture = LoadTexture("assets/peashooter.png");
-    juego->peashooter_front_texture = LoadTexture("assets/peashooter_front.png");
     juego->sunflower_texture = LoadTexture("assets/sunflower.png");
     juego->wall_nut_1_texture = LoadTexture("assets/wall-nut_1.png");
     juego->wall_nut_2_texture = LoadTexture("assets/wall-nut_2.png");
@@ -50,7 +49,6 @@ void texture_unload(estadojuego *juego){ // cierra las texturas
     UnloadTexture(juego->shovel_texture);
     //plantas
     UnloadTexture(juego->peashooter_texture);
-    UnloadTexture(juego->peashooter_front_texture);
     UnloadTexture(juego->sunflower_texture);
     UnloadTexture(juego->wall_nut_1_texture);
     UnloadTexture(juego->wall_nut_2_texture);
@@ -376,22 +374,6 @@ void draw(estadojuego *juego){
                 }
                 
                 
-            }
-        }
-        // dibuja plantas (solo lanzaguizantes sin boca)
-        for(int i = 0; i<MAX_PLANTAS; i++){
-            planta *p = &juego->lista_plantas[i];
-
-            if(p->activo && p->tipo == 1){
-                int p_x = (p->columna * (tile_width + tile_offset)) + (tile_width / 2) + move_x;
-                int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y-100;
-                DrawTextureEx(
-                    juego->peashooter_front_texture, 
-                    (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
-                    0.0f,
-                    rescale,
-                    juego->filtro
-                );
             }
         }
         for(int i = 0; i<MAX_INTERACTUABLES; i++){

@@ -100,7 +100,6 @@ typedef struct{
     Texture2D shovel_texture;
     //  plantas
     Texture2D peashooter_texture;
-    Texture2D peashooter_front_texture;
     Texture2D sunflower_texture;
     Texture2D wall_nut_1_texture;
     Texture2D wall_nut_2_texture;
