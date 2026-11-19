@@ -3,8 +3,11 @@
 
 #include "global.h"
 
+void cargar_config(estadojuego* juego);
+void init(estadojuego* juego);
 void procesar_entrada(estadojuego* juego);
 void music_load(estadojuego* juego);
 void music_update(estadojuego* juego);
 void music_unload(estadojuego* juego);
+
 #endif

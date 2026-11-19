@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "raylib.h"
 #include "global.h"
+#include "visual.h"
 #include "logic.h"
 
 #define move_x 445
@@ -156,7 +158,6 @@ void procesar_entrada(estadojuego* juego){
 void music_load(estadojuego* juego){
     InitAudioDevice();
 
-    juego->volume = 0.8f;
     juego->pause = false;
     juego->cancion_actual = 0;
     
@@ -218,4 +219,122 @@ void music_unload(estadojuego* juego){
     //unload de la musica y fin del dispositivo de audio
     UnloadMusicStream(juego->backgroundMusic);
     CloseAudioDevice();
+}
+
+void cargar_config(estadojuego* juego){
+    // lee el archivo config
+    FILE* f = fopen("config.txt", "r");
+
+    if (f == NULL)
+        // si no hay archivo, detiene la funcion
+        return;
+
+    char token[64];
+    float val;
+    while (fscanf(f, "%63s %f", token, &val) == 2) {
+        // mientras fscanf consiga leer 2 valores, una cadena y un float
+        // compara palabras clave con strcmp y asigna el valor
+        if (strcmp(token, "soles_iniciales") == 0)
+            juego->soles = (int)val;
+        else if(strcmp(token, "zombies_total") == 0)
+            juego->zombies_total = (int)val;
+        else if(strcmp(token, "vida_casa") == 0)
+            juego->vida_casa = (int)val;
+        else if(strcmp(token, "SetTargetFPS") == 0)
+            SetTargetFPS((int)val);
+        else if(strcmp(token, "SetMusicVolume") == 0){
+            if (val < 0.0f)
+                val = 0.0f;
+            if (val > 1.0f)
+                val = 1.0f;
+            juego->volume = val;
+        }
+        else if(strcmp(token, "filtro_r") == 0){
+            if (val < 0) val = 0;
+            if (val > 255) val = 255;
+            juego->filtro.r = (unsigned char)val;
+        }
+        else if(strcmp(token, "filtro_g") == 0){
+            if (val < 0) val = 0;
+            if (val > 255) val = 255;
+            juego->filtro.g = (unsigned char)val;
+        }
+        else if(strcmp(token, "filtro_b") == 0){
+            if (val < 0) val = 0;
+            if (val > 255) val = 255;
+            juego->filtro.b = (unsigned char)val;
+        }
+    }
+    // cierra el archivo
+    fclose(f);
+}
+
+void init(estadojuego* juego){
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "webi wabo");
+    ToggleFullscreen();
+
+    // valores por defecto
+    SetTargetFPS(30);
+    juego->soles = 50;
+    juego->vida_casa = 1;
+    juego->volume = 0.8f;
+    juego->zombies_total = 33;
+    juego->filtro = WHITE;
+
+    // reemplaza los valores por defecto
+    cargar_config(juego);
+    // arregla los casos de valores bajo/sobre el limite
+    if (juego->vida_casa < 1) juego->vida_casa = 1;
+    if (juego->zombies_total < 1) juego->zombies_total = 1;
+    if (juego->zombies_total > 33) juego->zombies_total = 33;
+    if (juego->vida_casa > juego->zombies_total) juego->vida_casa = juego->zombies_total;
+    // valores no configurables
+    juego->vida_casa_inicial = juego->vida_casa;
+    juego->zombies_spawned = 0;
+    juego->ticks = 0;
+    juego->partida = PARTIDA_JUGANDO;
+    // oleadas
+    juego->ticks_oleada_actual = 0;
+    juego->oleada_actual = 0;
+    juego->c_intervalo = 0;
+    juego->zombie_kills = 0;
+    // semillas
+    juego->selected_seed = 0;
+    // semillas seleccionadas por defecto
+    juego->seed_slot[0] = 1;
+    juego->seed_slot[1] = 2;
+    juego->seed_slot[2] = 3;
+    juego->seed_slot[3] = 4;
+    juego->seed_slot[4] = 5;
+    // zombies inactivos
+    for (int i = 0; i < MAX_ZOMBIES; i++) {
+        juego->lista_zombies[i].activo = 0;
+    }
+    // plantas inactivas
+    for (int i = 0; i < MAX_PLANTAS; i++) {
+        juego->lista_plantas[i].activo = 0;
+    }
+    // proyectiles inactivos
+    for (int i = 0; i < MAX_PROYECTILES; i++) {
+        juego->lista_proyectiles[i].activo = 0;
+    }
+    // objetos tipo 0
+    for (int i = 0; i < MAX_INTERACTUABLES; i++) {
+        juego->lista_objetos[i].tipo = 0;
+    }
+    // cooldown de semillas
+    for (int i = 0; i < MAX_SEEDS; i++) {
+        juego->seed_cd[i] = 0;
+    }
+    // carga las texturas
+    texture_load(juego);
+    // carga la musica
+    music_load(juego);
+    // carga los efectos de sonido
+    sfx_load(juego);
+    juego->siren_played = 0;
+    juego->losemusic_played = 0;
+    juego->winmusic_played = 0;
+    // semilla aleatoria
+    SetRandomSeed(time(NULL));
 }

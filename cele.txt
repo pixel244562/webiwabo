@@ -1,5 +1,0 @@
-(personal)
-
-para compilar:
-distrobox enter c-dev
-make

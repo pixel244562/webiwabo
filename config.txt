@@ -1,0 +1,8 @@
+soles_iniciales 50
+zombies_total 33
+vida_casa 1
+SetTargetFPS 30
+SetMusicVolume 0.8
+filtro_r 255
+filtro_g 255
+filtro_b 255

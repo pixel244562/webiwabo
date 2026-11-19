@@ -68,6 +68,8 @@ void texture_unload(estadojuego *juego){ // cierra las texturas
 void draw(estadojuego *juego){
     BeginDrawing();
         ClearBackground(BLACK); // limpia la pantalla
+        // sombra para el texto
+        Color SHADOW = { juego->filtro.r / 2, juego->filtro.g / 2, juego->filtro.b / 2, 255 };
 
         /* Para dibujar texturas:
         DrawTexture(Texture2D texture, int posX, int posY, Color tint);   
@@ -76,19 +78,8 @@ void draw(estadojuego *juego){
             // Draw a Texture2D with rotation and scale
         */
 
-        DrawTexture(juego->lawn_texture, 0, 0, WHITE);
+        DrawTexture(juego->lawn_texture, 0, 0, juego->filtro);
 
-        /*
-        // (para visualizar dimensiones)
-        // dibuja el tablero
-        for(int y = 0; y<FILAS; y++){
-            for(int x = 0; x<COLUMNAS; x++){
-                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset)+move_y, tile_width, tile_width, (Color){ 182, 255, 92, 100 });
-                DrawRectangle(x*(tile_width+tile_offset)+move_x + tile_width-5, y*(tile_width+tile_offset) + tile_width-5 +move_y, 5, 5, RED);
-                DrawRectangle(x*(tile_width+tile_offset)+move_x, y*(tile_width+tile_offset)+move_y, 5, 5, BLUE);
-            }
-        }
-        */
         // dibujar las semillas
         const int h = 150, h2 = 25;
         // h+h2 = 175
@@ -97,7 +88,7 @@ void draw(estadojuego *juego){
             (Vector2){ 150.0f, (float)h }, 
             0.0f, 
             0.7f, 
-            WHITE
+            juego->filtro
         );
 
         DrawTextureEx(
@@ -105,7 +96,7 @@ void draw(estadojuego *juego){
             (Vector2){ 150.0f, (float)(h*2 + h2) }, 
             0.0f, 
             0.7f, 
-            WHITE
+            juego->filtro
         );
         
         DrawTextureEx(
@@ -113,7 +104,7 @@ void draw(estadojuego *juego){
             (Vector2){ 150.0f, (float)(h*3 + (h2*2)) }, 
             0.0f, 
             0.7f, 
-            WHITE
+            juego->filtro
         );
         
         DrawTextureEx(
@@ -121,7 +112,7 @@ void draw(estadojuego *juego){
             (Vector2){ 150.0f, (float)(h*4 + (h2*3)) }, 
             0.0f, 
             0.7f, 
-            WHITE
+            juego->filtro
         );
         
         DrawTextureEx(
@@ -129,7 +120,7 @@ void draw(estadojuego *juego){
             (Vector2){ 150.0f, (float)(h*5 + (h2*4)) }, 
             0.0f, 
             0.7f, 
-            WHITE
+            juego->filtro
         );
         
         // dibuja el cooldown de plantas
@@ -137,7 +128,6 @@ void draw(estadojuego *juego){
         for (int i = 0; i < MAX_SEEDS; i ++){
             if (juego->seed_cd[i] > 0){
                 int altura = 162 * juego->seed_cd[i] / get_seed_cd(i+1);
-                DrawRectangle(150,150+175*i,230,162*(juego->seed_cd[i]/get_seed_cd(i+1)), (Color){ 0, 0, 0, 100 });
                 DrawRectangle(150, 150+175*i+162 - altura,
                     230, altura, (Color){0, 0, 0, 100}
                 );
@@ -149,7 +139,7 @@ void draw(estadojuego *juego){
             int i = juego->selected_seed-1;
             int altura = 162;
             DrawRectangle(150, 150+175*i+162 - altura,
-                230, altura, (Color){255, 255, 255, 120}
+                230, altura, (Color){ juego->filtro.r, juego->filtro.g, juego->filtro.b, 120}
             );
         }
         
@@ -171,25 +161,20 @@ void draw(estadojuego *juego){
             }
             if(juego->soles < coste){
                 int altura = 162;
-                DrawRectangle(150, 150+175*(i-1), 230, altura, (Color){0, 0, 0, 60});
+                DrawRectangle(150, 150+175*(i-1), 230, altura, (Color){0, 0, 0, 70});
             }
         }
         // dibuja los costes de cada semilla
-        DrawText("100", 301, 242, 75, GRAY);
-        DrawText("100", 300, 240, 70, WHITE);
-        DrawText("50", 301+20, 242+h+h2+3, 75, GRAY);
-        DrawText("50", 300+20, 240+h+h2+3, 70, WHITE);
-        DrawText("50", 301+20, 242+(h+h2)*2+3, 75, GRAY);
-        DrawText("50", 300+20, 240+(h+h2)*2+3, 70, WHITE);
-        DrawText("50", 301+20, 242+(h+h2)*3+3, 75, GRAY);
-        DrawText("50", 300+20, 240+(h+h2)*3+3, 70, WHITE);
-        DrawText("125", 301, 242+(h+h2)*4+3, 75, GRAY);
-        DrawText("125", 300, 240+(h+h2)*4+3, 70, WHITE);
-
-        // rectangulo para visualizar forma de colisión rectangular de semillas
-        //DrawRectangle(150,150,230,162, (Color){ 182, 255, 92, 100 });
-        //DrawRectangle(150,150+175,230,162, (Color){ 182, 255, 92, 100 });
-        //{move_x*8, move_y*8, (tile_width+tile_offset), (tile_width+tile_offset)};
+        DrawText("100", 301, 242, 75, SHADOW);
+        DrawText("100", 300, 240, 70, juego->filtro);
+        DrawText("50", 301+20, 242+h+h2+3, 75, SHADOW);
+        DrawText("50", 300+20, 240+h+h2+3, 70, juego->filtro);
+        DrawText("50", 301+20, 242+(h+h2)*2+3, 75, SHADOW);
+        DrawText("50", 300+20, 240+(h+h2)*2+3, 70, juego->filtro);
+        DrawText("50", 301+20, 242+(h+h2)*3+3, 75, SHADOW);
+        DrawText("50", 300+20, 240+(h+h2)*3+3, 70, juego->filtro);
+        DrawText("125", 301, 242+(h+h2)*4+3, 75, SHADOW);
+        DrawText("125", 300, 240+(h+h2)*4+3, 70, juego->filtro);
 
         // dibuja plantas
         for(int i = 0; i<MAX_PLANTAS; i++){
@@ -205,7 +190,7 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
                             0.0f,
                             rescale,
-                            WHITE
+                            juego->filtro
                         );
                         break;
                     case 2:
@@ -214,17 +199,17 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
                             0.0f,
                             rescale,
-                            WHITE
+                            juego->filtro
                         );
                         break;
-                    case 3: // nuezDrawTexture(juego->bucket_texture, z_x-20, z_y-80, WHITE);
+                    case 3: // nuezDrawTexture(juego->bucket_texture, z_x-20, z_y-80, juego->filtro);
                         if(p->vida >= 720){ // 1440 / 2
                             DrawTextureEx(
                                 juego->wall_nut_1_texture, 
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         }
                         else if(p->vida >= 480){ // 1440 / 3
@@ -233,7 +218,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         }
                         else
@@ -242,7 +227,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         break;
                     case 4:
@@ -252,7 +237,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         }
                         else if(p->vida >= 50){
@@ -261,7 +246,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         }
                         else
@@ -270,7 +255,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(p_x - 85), (float)(p_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         break;
                     case 5:
@@ -279,7 +264,7 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(p_x - 100), (float)(p_y) }, 
                             0.0f,
                             rescale,
-                            WHITE
+                            juego->filtro
                         );
                         break;
                 }
@@ -299,7 +284,7 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(z_x), (float)(z_y) }, 
                             0.0f,
                             rescale,
-                            WHITE
+                            juego->filtro
                         );
                         break;
                     case 2: // zombie cono
@@ -309,14 +294,14 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                             DrawTextureEx(
                                 juego->cone_texture, 
                                 (Vector2){ (float)(z_x-20), (float)(z_y-80) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                         break;
                         }
@@ -326,7 +311,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                             break;
                         }
@@ -337,14 +322,14 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                             DrawTextureEx(
                                 juego->bucket_texture, 
                                 (Vector2){ (float)(z_x-20), (float)(z_y-70) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                             break;
                         }
@@ -354,7 +339,7 @@ void draw(estadojuego *juego){
                                 (Vector2){ (float)(z_x), (float)(z_y) }, 
                                 0.0f,
                                 rescale,
-                                WHITE
+                                juego->filtro
                             );
                             break;}
                     case 4: // bandera
@@ -363,7 +348,7 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(z_x), (float)(z_y) }, 
                             0.0f,
                             rescale,
-                            WHITE
+                            juego->filtro
                         );
                         break;
                 }
@@ -376,7 +361,7 @@ void draw(estadojuego *juego){
                 int p_x = (int)p->pos_x;
                 int p_y = (p->fila * (tile_width + tile_offset)) + (tile_width / 2) + move_y -120;
                 if(p->tipo == 1){
-                    DrawTexture(juego->pea_texture,p_x, p_y, WHITE);
+                    DrawTexture(juego->pea_texture,p_x, p_y, juego->filtro);
                 }
                 else{
                     DrawTextureEx(
@@ -384,7 +369,7 @@ void draw(estadojuego *juego){
                             (Vector2){ (float)(p_x), (float)(p_y) }, 
                             0.0f,
                             0.6,
-                            WHITE
+                            juego->filtro
                         );
                 }
                 
@@ -403,7 +388,7 @@ void draw(estadojuego *juego){
                         (Vector2){ (float)(obj_x), (float)(obj_y) }, 
                         0.0f,
                         rescale,
-                        WHITE
+                        juego->filtro
                     );
                     // para visualizar la colisisión de recogida con clic
                     // DrawCircle(centro_x, centro_y,90,(Color){ 182, 255, 92, 100 });
@@ -418,7 +403,7 @@ void draw(estadojuego *juego){
             (Vector2){ 10.0f, 10.0f}, 
             0.0f,
             0.7f,
-            WHITE
+            juego->filtro
         );
         // dibuja la pala
         DrawTextureEx(
@@ -426,18 +411,18 @@ void draw(estadojuego *juego){
             (Vector2){ 1760.0f, 900.0f}, 
             0.0f,
             0.55f,
-            WHITE
+            juego->filtro
         );
 
-        DrawText(TextFormat("%d", juego->soles), 171, 42, 95, GRAY);
-        DrawText(TextFormat("%d", juego->soles), 170, 40, 90, WHITE);
+        DrawText(TextFormat("%d", juego->soles), 171, 42, 95, SHADOW);
+        DrawText(TextFormat("%d", juego->soles), 170, 40, 90, juego->filtro);
         if(juego->selected_seed==6){ // si agarra la pala
             DrawTextureEx(
                 juego->shovel_texture, 
                 (Vector2){ juego->mouse_pos.x-50.0f, juego->mouse_pos.y-50.0f}, 
                 0.0f,
                 0.55f,
-                WHITE
+                juego->filtro
             );
         }
 
@@ -446,82 +431,14 @@ void draw(estadojuego *juego){
         const char *TextFormat(const char *text, ...); Text formatting with variables (sprintf() style)
         */
         
-        // texto ---------------------------------------------------------------------------------------------------
-        // DEBUGGING
-        /*
-        DrawFPS(10, 10);
-        // soles
-        DrawText(TextFormat("Sun: %d", juego->soles), 150, 10, 20, YELLOW);
-        // vida
-        DrawText(TextFormat("Lives: %d", juego->vida_casa), 150, 10+20, 20, RED);
-        // ticks y gametime
-        DrawText(TextFormat("ticks: %d", juego->ticks), 10, 10+20, 20, LIGHTGRAY);
-        DrawText(TextFormat("%d:%d:%d",(juego->ticks/(30*30))%60, (juego->ticks/30)%60, (juego->ticks)%60), 10, 10+40, 20, LIGHTGRAY);
-        // ultimo mouse clic (en coordenadas de pasto) -1 quiere decir fuera del pasto
-        DrawText(TextFormat("Grass Click: (%d, %d)", juego->ultimo_clic_fila, juego->ultimo_clic_columna), 10, 10+60, 20, GREEN);
-        // semilla seleccionada (numero de slot)
-        DrawText(TextFormat("Selected Seed: %d", juego->selected_seed), 10, 10+80, 20, GREEN);
-        switch(juego->selected_seed){
-            case 1:
-                switch(juego->seed_slot[0]){
-                    case 1:
-                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
-                    case 2:
-                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
-                    case 3:
-                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
-                    default:
-                        DrawText("None", 10, 10+100, 20, GREEN);
-                }
-                break;
-            case 2:
-                switch(juego->seed_slot[1]){
-                    case 1:
-                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
-                    case 2:
-                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
-                    case 3:
-                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
-                    default:
-                        DrawText("None", 10, 10+100, 20, GREEN);
-                }
-                break;
-            case 3:
-                switch(juego->seed_slot[2]){
-                    case 1:
-                        DrawText("Peashooter", 10, 10+100, 20, GREEN); break;
-                    case 2:
-                        DrawText("Sunflower", 10, 10+100, 20, GREEN); break;
-                    case 3:
-                        DrawText("Wall-nut", 10, 10+100, 20, GREEN); break;
-                    default:
-                        DrawText("None", 10, 10+100, 20, GREEN);
-                }
-                break;
-            default:
-
-                DrawText("None", 10, 10+100, 20, GREEN);
-        }
-        
-        if(juego->oleada_actual != juego->oleada_previa){
-            juego->oleada_previa = juego->oleada_actual;
-            juego->zombies_coming = 1;
-        }
-        if(juego->zombies_coming == 1){
-            DrawText("THE ZOMBIES ARE COMING!", 20, 10+80, 60, WHITE);
-        }
-        if(juego->ticks % 300 == 0){
-            juego->zombies_coming = 0;
-        }
-        */
         // resultado
         if(juego->partida == PARTIDA_LOSS){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
-            DrawText("THE ZOMBIES ATE YOUR BRAINS!", 20, 10+80, 60, WHITE);
+            DrawText("THE ZOMBIES ATE YOUR BRAINS!", 20, 10+80, 60, juego->filtro);
         }
         if(juego->partida == PARTIDA_WIN){
             DrawRectangle(0 , 0 ,SCREEN_WIDTH ,SCREEN_HEIGHT , (Color){ 0, 0, 0, 200});
-            DrawText("YOU WIN!", 20, 10+80, 60, WHITE);
+            DrawText("YOU WIN!", 20, 10+80, 60, juego->filtro);
         }
         
 

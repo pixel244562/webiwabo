@@ -20,19 +20,10 @@
 #define MAX_PROYECTILES 100
 #define MAX_INTERACTUABLES 20
 #define MAX_CANCIONES 2
-#define CASA_HP_INICIAL 1
 //Estado partida
 #define PARTIDA_JUGANDO 0
 #define PARTIDA_WIN 1
 #define PARTIDA_LOSS 2
-//Oleadas
-#define MAX_OLEADAS 4
-#define TICKS_DESCANSO 30
-#define TICKS_PREPARACION 60 //Inicio de partida, tiempo inicial para colocar plantas
-#define FASE_PREPARACION 0
-#define FASE_OLEADA 1
-#define FASE_DESCANSO 2
-#define FASE_FIN 3
 //CDs de semillas (30 ticks = 1 sec)
 #define SHORT_SEED_CD 300
 #define MEDIUM_SEED_CD 450
@@ -41,37 +32,47 @@
 typedef struct {
     int tipo; //1: común, 2: cono, 3: cubo, 4: bandera
     int vida;
+    //
     char fila;
     char columna;
     char activo;
     char velocidad; //Cada cuantos ticks el zombie ejecuta una acción SIEMPRE OCUPARLO CON VALORES >= 1 o cosas raras podrían pasar
     float pos_x; // posición exacta (px)
+    //
 } zombie;
 
 typedef struct{
     int tipo; //1 Lanzaguisantes, 2 girasol, 3 nuez, 4 ajo, 5 plantorcha
     int vida;
+    //
+    int cd;
     char fila;
     char columna;
-    int cd;
     char activo;
+    // + 1 byte
 } planta;
 
 typedef struct{
     int activo;
     int tipo; // 1 guizante, 2 guizante de fuego
+    //
     int dmg;
+    float pos_x; // posición exacta (px)
+    //
     char fila; // fila de pasto
     char columna; // columna de pasto
-    float pos_x; // posición exacta (px)
+    // + 2 bytes
 } proyectil;
 
 typedef struct{
     int x;
     int y;
+    //
     int destino_y;
     int tipo; // 1: sol
+    //
     int move; // 0: don't move 1: move
+    // + 2 bytes
 } objeto;
 
 typedef struct{
@@ -82,6 +83,7 @@ typedef struct{
     objeto lista_objetos[MAX_INTERACTUABLES];
 
     //Texturas
+    Color filtro;
     //  zombies
     Texture2D zombie_texture;
     Texture2D bucket_texture;
@@ -115,6 +117,7 @@ typedef struct{
     int partida;
     int soles;
     int vida_casa;
+    int vida_casa_inicial;
     int ticks; //Reloj interno del juego para movimientos, cooldown, etc.
 
     int ultimo_clic_fila;
@@ -126,19 +129,17 @@ typedef struct{
 
     //Oleadas
     int oleada_actual;
-    int oleada_previa;
-    int fase;
     int ticks_oleada_actual;
-    int zombies_coming;
     int c_intervalo;
     int zombie_kills;
-
+    int zombies_total; // cuántos zombies aparecen en la partida
+    int zombies_spawned; // cuántos han aparecido hasta ahora
     //Musica
     Music backgroundMusic;
     float volume;
-    bool pause;
     int cancion_actual;
     const char* playlist[MAX_CANCIONES];
+    bool pause;
 
     //Sfx
     int siren_played;
