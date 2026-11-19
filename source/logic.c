@@ -431,7 +431,8 @@ void waves(int oleadas, estadojuego* juego){
     int intervalo = duracion / n; // distribuye los zombies
 
     juego->ticks_oleada_actual++;
-    if(juego->ticks_oleada_actual % intervalo == 0 &&
+    if(juego->ticks_oleada_actual <= duracion &&
+        juego->ticks_oleada_actual % intervalo == 0 &&
         juego->zombies_spawned < juego->zombies_total){
         if(juego->siren_played == 0){
             PlaySound(juego->sfx_siren);
@@ -478,8 +479,8 @@ void waves(int oleadas, estadojuego* juego){
         zombie_spawn(x, y, tipo, juego);
         juego->zombies_spawned++;
     }
-    // si llega a la duración, la oleada termina
-    if(juego->ticks_oleada_actual >= duracion){
+    // si llega a la duración + tiempo de descanso, la oleada termina
+    if(juego->ticks_oleada_actual >= duracion + TICKS_DESCANSO){
         juego->siren_played = 0;
         juego->ticks_oleada_actual = 0;
         juego->c_intervalo = 0;

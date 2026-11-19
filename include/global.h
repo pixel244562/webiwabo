@@ -20,6 +20,8 @@
 #define MAX_PROYECTILES 100
 #define MAX_INTERACTUABLES 20
 #define MAX_CANCIONES 2
+// oleadas
+#define TICKS_DESCANSO 450 // 15 segundos
 //Estado partida
 #define PARTIDA_JUGANDO 0
 #define PARTIDA_WIN 1
